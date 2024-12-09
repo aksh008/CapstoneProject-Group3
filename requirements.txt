@@ -1,0 +1,5 @@
+tenserflow
+pandas
+chainlit
+kagglehub
+openai
