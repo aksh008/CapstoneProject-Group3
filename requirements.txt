@@ -1,5 +1,11 @@
-tenserflow
+tensorflow
 pandas
-chainlit
+numpy
+pillow
+flask
+gunicorn
 kagglehub
-openai
+strictyaml
+joblib
+pyyaml
+pydantic>=1.8.1,<2.0.0
