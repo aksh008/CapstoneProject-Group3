@@ -5,12 +5,13 @@ parent, root = file.parent, file.parents[1]
 sys.path.append(str(root))
 
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-
+import numpy as np
 from harit_model.config.core import config
-from harit_model.pipeline import harit_pipe
-from harit_model.processing.data_manager import load_dataset, save_pipeline
+from harit_model.processing.data_manager import load_dataset,save_pipeline
+from harit_model.processing.validation import evaluate_model
+from harit_model.pipeline import train_mobilenetv2
+from harit_model.processing.features import train_test_valid
+from harit_model.config.core import TRAINED_MODEL_DIR
 
 def run_training() -> None:
     
@@ -18,27 +19,28 @@ def run_training() -> None:
     Train the model.
     """
 
-    # read training data
-    data = load_dataset(file_name=config.app_config.training_data_file)
+    # download and read training data
+    path = load_dataset()
+    
+    #train, test, valid, num classes
+    class_indices, train_data, test_data,valid_data,num_classes = train_test_valid(config.app_config.data_dir,
+                                                                                    target_size=(224, 224),
+                                                                                    batch_size=config.model_config.batch_size)
+    model = train_mobilenetv2(num_classes)
+        
+    # Train the model
+    print("Training the MobileNetV2 model...")
+    history = model.fit(train_data,
+                    validation_data=valid_data,
+                    epochs=config.model_config.epochs,
+                    batch_size=config.model_config.batch_size)
 
-    # divide train and test
-    X_train, X_test, y_train, y_test = train_test_split(
-        data[config.model_config.features],  # predictors
-        data[config.model_config.target],
-        test_size=config.model_config.test_size,
-        # we are setting the random seed here
-        # for reproducibility
-        random_state=config.model_config.random_state,
-    )
-
-    # Pipeline fitting
-    harit_pipe.fit(X_train,y_train)
-    y_pred = harit_pipe.predict(X_test)
-    print("Accuracy(in %):", accuracy_score(y_test, y_pred)*100)
-
+    test_loss, test_acc = evaluate_model(model,test_data)
+    
     # persist trained model
-    save_pipeline(pipeline_to_persist= harit_pipe)
+    save_pipeline(model)
     # printing the score
+    print(f'Test Accuract:{test_acc},Test loss: {test_loss}' )
     
 if __name__ == "__main__":
     run_training()

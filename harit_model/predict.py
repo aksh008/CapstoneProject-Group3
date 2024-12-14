@@ -7,44 +7,65 @@ sys.path.append(str(root))
 from typing import Union
 import pandas as pd
 import numpy as np
-
+import json
 from harit_model import __version__ as _version
 from harit_model.config.core import config
-from harit_model.pipeline import harit_pipe
+from harit_model.processing.features import preprocess_image
 from harit_model.processing.data_manager import load_pipeline
-from harit_model.processing.data_manager import pre_pipeline_preparation
-from harit_model.processing.validation import validate_inputs
+from harit_model.config.core import TRAINED_MODEL_DIR
+from harit_model.config.core import INDICES_DIR
+import os
+
+pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.h5"
+plant_diesease_model= load_pipeline(file_name=pipeline_file_name)
+
+test_data = config.app_config.test_data_dir
 
 
-pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
-harit_pipe= load_pipeline(file_name=pipeline_file_name)
+def make_prediction(img_path):
 
+    # def list_files_in_folder(folder_path):
+    #     """
+    #     List all files in a folder.
 
-def make_prediction(*,input_data:Union[pd.DataFrame, dict]) -> dict:
-    """Make a prediction using a saved model """
+    #     Args:
+    #         folder_path (str): Path to the folder.
 
-    validated_data, errors = validate_inputs(input_df=pd.DataFrame(input_data))
+    #     Returns:
+    #         list: List of file names in the folder.
+    #     """
+    #     try:
+    #         file_names = os.listdir(folder_path)
+    #         return file_names
+
+    # #load class indices
     
-    #validated_data=validated_data.reindex(columns=['Pclass','Sex','Age','Fare', 'Embarked','FamilySize','Has_cabin','Title'])
-    validated_data=validated_data.reindex(columns=config.model_config.features)
-    #print(validated_data)
-    results = {"predictions": None, "version": _version, "errors": errors}
-    
-    predictions = harit_pipe.predict(validated_data)
+    try:
+        with open(INDICES_DIR/"class_indices.json", "r") as json_file:
+            class_indices = json.load(json_file)
+    except Exception as e:
+        print("File not Found")
 
-    results = {"predictions": predictions,"version": _version, "errors": errors}
-    print(results)
-    if not errors:
 
-        predictions = harit_pipe.predict(validated_data)
-        results = {"predictions": predictions,"version": _version, "errors": errors}
-        #print(results)
+    class_indices = list(class_indices.keys())
 
-    return results
+    # files = list_files_in_folder(test_data)
+    # img_path = files[0]
+    img_array = preprocess_image(img_path)
+    predictions = plant_diesease_model.predict(img_array)
+    predicted_class = np.argmax(predictions, axis=1)
+    predicted_label = class_indices[predicted_class[0]]
+    print(f"Predicted label: {predicted_label}")
+    return predicted_label
 
 if __name__ == "__main__":
 
-    data_in={'PassengerId':[79],'Pclass':[2],'Name':["Caldwell, Master. Alden Gates"],'Sex':['male'],'Age':[0.83],
-                'SibSp':[0],'Parch':[2],'Ticket':['248738'],'Cabin':[np.nan,],'Embarked':['S'],'Fare':[29]}
-    
-    make_prediction(input_data=data_in)
+    # Get user input for the image path
+    img_path = input("Enter the path to the image: ").strip()
+
+    # Validate if the provided path exists
+    if not os.path.exists(img_path):
+        print(f"Error: The file '{img_path}' does not exist. Please check the path and try again.")
+    else:
+        # Make prediction
+        make_prediction(img_path)

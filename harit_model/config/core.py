@@ -5,21 +5,22 @@ file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
 sys.path.append(str(root))
 
+from pathlib import Path
 from typing import Dict, List
+
 from pydantic import BaseModel
 from strictyaml import YAML, load
-
 import harit_model
 
 # Project Directories
 PACKAGE_ROOT = Path(harit_model.__file__).resolve().parent
-#print(PACKAGE_ROOT)
 ROOT = PACKAGE_ROOT.parent
 CONFIG_FILE_PATH = PACKAGE_ROOT / "config.yml"
 #print(CONFIG_FILE_PATH)
 
-DATASET_DIR = PACKAGE_ROOT / "datasets"
+DATASET_DIR = PACKAGE_ROOT / "dataset"
 TRAINED_MODEL_DIR = PACKAGE_ROOT / "trained_models"
+INDICES_DIR = PACKAGE_ROOT/"indices"
 
 
 class AppConfig(BaseModel):
@@ -28,10 +29,9 @@ class AppConfig(BaseModel):
     """
 
     package_name: str
-    training_data_file: str
-    test_data_file: str
     pipeline_save_file: str
-
+    data_dir:str
+    test_data_dir:str
 
 class ModelConfig(BaseModel):
     """
@@ -39,26 +39,12 @@ class ModelConfig(BaseModel):
     training and feature engineering.
     """
 
-    target: str
-    features: List[str]
-    unused_fields: List[str]
-    embarked_var: str 
-    gender_var:str 
-    title_var:str 
-    age_var: str 
-    gender_mappings: Dict[str, int]
-    embarked_mappings: Dict[str, int]
-    title_mappings: Dict[str, int]
-  
     test_size:float
-    random_state: int
-    n_estimators: int
-    max_depth: int
-
+    epochs: int
+    batch_size: int
 
 class Config(BaseModel):
     """Master config object."""
-
     app_config: AppConfig
     model_config: ModelConfig
 
