@@ -3,7 +3,9 @@ from pathlib import Path
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
 sys.path.append(str(root))
-
+import chainlit as cl
+from openai import OpenAI
+import openai
 from typing import Union
 import pandas as pd
 import numpy as np
@@ -58,14 +60,106 @@ def make_prediction(img_path):
     print(f"Predicted label: {predicted_label}")
     return predicted_label
 
-if __name__ == "__main__":
+api = "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"
 
-    # Get user input for the image path
-    img_path = input("Enter the path to the image: ").strip()
+# API_KEY = os.getenv("OPENAI_API_KEY")
 
-    # Validate if the provided path exists
-    if not os.path.exists(img_path):
-        print(f"Error: The file '{img_path}' does not exist. Please check the path and try again.")
+def get_chatgpt_diagnosis(disease):
+
+    client = OpenAI(
+        api_key=api,  # This is the default and can be omitted
+    )
+
+    chat_completion = client.chat.completions.create(
+       messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an agricultural expert specializing in plant disease treatment. "
+                                   "Provide comprehensive, practical treatment recommendations."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Based on this plant disease analysis,please show plant name and Disease name first then  provide detailed treatment recommendations below 200 words : {disease}"
+                    }
+                ],
+        model="gpt-4o-mini",
+    )
+    return chat_completion
+    
+    
+@cl.on_chat_start
+async def start():
+    # cl.user_session.set("model", load_model("plant_disease_model.h5"))
+    
+    await cl.Message(content = "Please upload Image with text").send()
+
+
+@cl.on_message
+async def op(msg: cl.Message):
+    # Check if the message contains any files (image input)
+    images = [file for file in msg.elements if "image" in file.mime]
+    
+    if images:  # If images are attached
+        img_path = images[0].path
+        
+        # Display the uploaded image
+        # image = cl.Image(path=img_path, name="uploaded_image", display="inline")
+        # await cl.Message(
+        #     content="Here is the uploaded image:",
+        #     elements=[image]  # Attach the image to the message
+        # ).send()
+        
+        # Get the predicted disease from the image
+        predicted_disease = make_prediction(img_path)
+        
+        # Then pass the predicted disease to get_chatgpt_diagnosis
+        response = get_chatgpt_diagnosis(predicted_disease)
+        
+        # Send the response from ChatGPT
+        await cl.Message(
+            content=f"{response.choices[0].message.content}", 
+            author="plantcure"
+        ).send()
+    
+    elif msg.content:  # If only text is provided
+        # Directly pass the text to ChatGPT for diagnosis
+        response = get_chatgpt_diagnosis(msg.content)
+        
+        # Send the response from ChatGPT
+        await cl.Message(
+            content=f"{response.choices[0].message.content}", 
+            author="plantcure"
+        ).send()
+    
     else:
-        # Make prediction
-        make_prediction(img_path)
+        # If no valid input is provided
+        await cl.Message(
+            content="Please provide an image or text for processing.",
+            author="plantcure"
+        ).send()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# if __name__ == "__main__":
+
+#     # Get user input for the image path
+#     img_path = input("Enter the path to the image: ").strip()
+
+#     # Validate if the provided path exists
+#     if not os.path.exists(img_path):
+#         print(f"Error: The file '{img_path}' does not exist. Please check the path and try again.")
+#     else:
+#         # Make prediction
+#         make_prediction(img_path)

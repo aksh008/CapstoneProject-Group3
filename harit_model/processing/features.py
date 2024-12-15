@@ -27,9 +27,9 @@ def preprocess_image(img_path, target_size=(224, 224)):
     return img_array
 
 # Extract features using flow_from_directory
-def train_test_valid(data_dir, target_size=(224, 224), batch_size=config.model_config.batch_size):
+def train_test_valid(data_dir, target_size=(224, 224), batch_size=64):
     # Data generator for loading and preprocessing images
-    train_datagen = ImageDataGenerator(rescale=1/255., validation_split=config.model_config.test_size)
+    train_datagen = ImageDataGenerator(rescale=1/255., validation_split=0.2)
     test_datagen = ImageDataGenerator(rescale = 1/255.)
 
 
