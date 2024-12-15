@@ -5,7 +5,8 @@ Capstone Project for AIMLOps by Group 3 , this is for plant desease detection.
  
 
 # Project Flow
-<img width="594" alt="image" src="https://github.com/aksh008/CapstoneProject-Group3/blob/main/pd-6.png">
+![High level Flow ]([https://github.com/username/repository/blob/main/path/to/image.png])
+
 
 # High level Architecture
 
