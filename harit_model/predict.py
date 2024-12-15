@@ -76,11 +76,12 @@ def get_chatgpt_diagnosis(disease):
                         "role": "system",
                         "content": "You are an agricultural expert specializing in plant disease treatment. "
                                    "Provide comprehensive, practical treatment recommendations."
+                                #    "If available, also suggest website link which is available and able to open in browser and relevant to the plant disease and cure."
                     },
                     {
                         "role": "user",
                         "content": f"Based on this plant disease analysis,please show plant name and Disease name first then  provide detailed treatment recommendations below 200 words : {disease}"
-                    }
+                    },
                 ],
         model="gpt-4o-mini",
     )
