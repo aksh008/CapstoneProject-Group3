@@ -5,7 +5,7 @@ output_path = r"C:\Akshay\AIMLOps24\Capstone Project\CapstoneProject-Group3\hari
 
 try:
     # Attempt to download the dataset
-    path = kagglehub.dataset_download("vipoooool/new-plant-diseases-dataset", path=output_path)
+    path = kagglehub.dataset_download("vipoooool/new-plant-diseases-dataset")
     print("Dataset downloaded successfully to:", path)
 except Exception as e:
     print("Error downloading dataset:", str(e))
