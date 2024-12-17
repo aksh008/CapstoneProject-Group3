@@ -6,7 +6,7 @@ FROM python:3.10
 WORKDIR /capstone
 
 # copy application files
-ADD . .
+ADD . /capstone
 
 
 # update pip
