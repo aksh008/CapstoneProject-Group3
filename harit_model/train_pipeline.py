@@ -15,6 +15,9 @@ from harit_model.processing.validation import evaluate_model
 from harit_model.pipeline import train_mobilenetv2
 from harit_model.processing.features import train_test_valid
 from harit_model.config.core import TRAINED_MODEL_DIR
+from clearml import Task
+
+task = Task.init(project_name='Harit_project_15Dec',task_name='training_task_1')
 
 
 

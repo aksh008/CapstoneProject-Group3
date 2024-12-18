@@ -11,7 +11,7 @@ from harit_model.processing.features import train_test_valid
 from harit_model.processing.validation import evaluate_model
 from harit_model.config.core import config
 from harit_model.processing.data_manager import load_dataset, save_pipeline
-from tensorflow.keras.optimizers import Adam
+# from tensorflow.keras.optimizers import Adam
 
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.models import Sequential
@@ -25,7 +25,7 @@ parameters = {
     # 'neurons': 128,
     # 'hidden_layers':2,
     # 'activation': 'relu',
-    'optimizer': Adam,
+    'optimizer': 'Adam',
     'learning_rate':0.001
 }
 
