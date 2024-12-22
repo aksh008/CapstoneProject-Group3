@@ -6,7 +6,7 @@ from fastapi import File, UploadFile
 class PredictionResults(BaseModel):
     errors: Optional[Any]
     version: str
-    predictions: Optional[int]  # Or modify this to any other structure depending on your model output
+    predictions: str  # Or modify this to any other structure depending on your model output
 
 
 # Define a model for handling image inputs (using file upload)
@@ -38,18 +38,18 @@ class MultipleImageDataInputs(BaseModel):
         }
 
 # FastAPI endpoint for image prediction
-from fastapi import FastAPI, UploadFile, File
+# from fastapi import FastAPI, UploadFile, File
 
-app = FastAPI()
+# app = FastAPI()
 
-@app.post("/predict_image/")
-async def predict_image(file: UploadFile = File(...)):
-    # Handle the uploaded image file
-    # You could save it or process it in memory depending on your model's requirements
-    contents = await file.read()  # Read the file contents
+# @app.post("/predict_image/")
+# async def predict_image(file: UploadFile = File(...)):
+#     # Handle the uploaded image file
+#     # You could save it or process it in memory depending on your model's requirements
+#     contents = await file.read()  # Read the file contents
     
-    # Use this content in your model prediction logic here
+#     # Use this content in your model prediction logic here
     
-    prediction = 1  # Example prediction result, replace with your model's output
+#     prediction = 1  # Example prediction result, replace with your model's output
     
-    return {"prediction": prediction}
+#     return {"prediction": prediction}
