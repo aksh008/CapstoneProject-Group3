@@ -1,13 +1,11 @@
 include *.txt
 include *.md
 include *.pkl
-recursive-include ./titanic_model *
+recursive-include ./harit_model *
 
-include titanic_model/datasets/bike-rental-dataset.csv
-include titanic_model/datasets/test.csv
-include titanic_model/trained_models/*.pkl
-include titanic_model/VERSION
-include titanic_model/config.yml
+include harit_model/trained_models/*.h5
+include harit_model/VERSION
+include harit_model/config.yml
 
 include ./requirements/requirements.txt
 include ./requirements/test_requirements.txt
