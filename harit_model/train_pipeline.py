@@ -36,7 +36,7 @@ def run_training() -> None:
                                                                                     target_size=(224, 224),
                                                                                     batch_size=64)
     model = train_mobilenetv2(num_classes)
-    
+    print(parameters['epoch']
     # logdir = "logs/digits" + datetime.now().strftime("%Y%m%d-%H%M%S")
     logdir = "logs/digits/" + datetime.now().strftime("%Y%m%d-%H%M%S")
     callbacks_list = [tf.keras.callbacks.TensorBoard(log_dir=logdir),
