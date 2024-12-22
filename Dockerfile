@@ -2,13 +2,13 @@
 FROM python:3.10
 
 # copy application files
-ADD /harit_model_api /harit_model_api/
+ADD ./harit_model_api /harit_model_api/
 
 # specify working directory
 WORKDIR /harit_model_api
 
 # copy the Trained Model H5 file to App folder
-COPY ./harit_model/trained_models/*.h5 ./harit_model_api/app/
+COPY ./harit_model/trained_models/*.h5 /harit_model_api/app/
 
 # update pip
 RUN pip install --upgrade pip
@@ -20,7 +20,6 @@ RUN pip install -r requirements.txt
 EXPOSE 8000
 
 # start fastapi application
-CMD ["chainlit", "run" ,"harit_model/predict.py", "--host", "0.0.0.0"]
-
-
-
+# CMD ["chainlit", "run" ,"app/main.py", "--host", "0.0.0.0"]
+CMD ["python", "app/main.py"]
+# CMD ["uvicorn", "harit_model_api.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
