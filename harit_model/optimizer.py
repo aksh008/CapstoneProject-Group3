@@ -4,7 +4,7 @@ from clearml.automation import GridSearch, RandomSearch, HyperParameterOptimizer
 
 task = Task.init(
     project_name='Harit_project_15Dec',
-    task_name='optimizer_task_2',
+    task_name='optimizer_task_22nd DEC',
     task_type=Task.TaskTypes.optimizer,
 )
 
