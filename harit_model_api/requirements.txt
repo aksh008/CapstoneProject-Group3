@@ -10,4 +10,4 @@ joblib
 pyyaml
 pydantic>=1.8.1,<2.0.0
 
-harit_model-1-py3-none-any.whl
+harit_model-2-py3-none-any.whl
