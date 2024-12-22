@@ -1,1 +1,2 @@
 from .health import Health
+from .predict import MultipleImageDataInputs, PredictionResults
