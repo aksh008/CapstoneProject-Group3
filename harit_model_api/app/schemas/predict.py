@@ -44,12 +44,11 @@ class MultipleImageDataInputs(BaseModel):
 
 # @app.post("/predict_image/")
 # async def predict_image(file: UploadFile = File(...)):
-#     # Handle the uploaded image file
-#     # You could save it or process it in memory depending on your model's requirements
-#     contents = await file.read()  # Read the file contents
+#      # Handle the uploaded image file
+#      # You could save it or process it in memory depending on your model's requirements
+#      contents = await file.read()  # Read the file contents
     
-#     # Use this content in your model prediction logic here
+#      # Use this content in your model prediction logic here
     
-#     prediction = 1  # Example prediction result, replace with your model's output
-    
-#     return {"prediction": prediction}
+#      prediction = 1  # Example prediction result, replace with your model's output    
+#      return {"prediction": prediction}

@@ -20,10 +20,12 @@ from harit_model.config.core import config
 from harit_model.config.core import TRAINED_MODEL_DIR, INDICES_DIR
 
 def preprocess_image(img_path, target_size=(224, 224)):
+    print ("img_path at preprocess_image method entry:::",img_path)
     img = load_img(img_path, target_size=(224, 224))  # Resize image
     img_array = img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     img_array = preprocess_input(img_array)  # Normalize image
+    print ("end of preprocess_image")
     return img_array
 
 # Extract features using flow_from_directory

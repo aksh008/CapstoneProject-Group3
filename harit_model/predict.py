@@ -56,9 +56,10 @@ def make_prediction(img_path):
     img_array = preprocess_image(img_path)
     predictions = plant_diesease_model.predict(img_array)
     predicted_class = np.argmax(predictions, axis=1)
-    predicted_label = class_indices[predicted_class[0]]
-    print(f"Predicted label: {predicted_label}")
-    return predicted_label
+   # predicted_label = class_indices[predicted_class[0]]
+    #return predicted_label
+    print("predictions results:::::",predictions)
+    return predictions
 
 api = "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"
 
