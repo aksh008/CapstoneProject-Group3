@@ -7,8 +7,8 @@ ADD /harit_model_api /harit_model_api/
 # specify working directory
 WORKDIR /harit_model_api
 
-# copy the pk file tp App folder
-COPY . /trained_models/*.h5 /harit_model_api/app
+# copy the Trained Model H5 file to App folder
+COPY ./harit_model/trained_models/*.h5 ./harit_model_api/app/
 
 # update pip
 RUN pip install --upgrade pip
