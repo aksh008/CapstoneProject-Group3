@@ -18,7 +18,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from clearml import Task, TaskTypes
 
-task = Task.init(project_name='Harit_project_15Dec',task_name='training_task_1')
+# task = Task.init(project_name='Harit_project_15Dec',task_name='training_task_1')
 
 parameters = {
     'epoch': 2,
