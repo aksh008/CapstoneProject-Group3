@@ -10,7 +10,7 @@ task = Task.init(
 
 optimizer = HyperParameterOptimizer(
       # specifying the task to be optimized, task must be in system already so it can be cloned
-      base_task_id="aab1245ae84744c2a8f602f5871872a1", 
+      base_task_id="36406f5a19b84ab6a50801bbc1a733dd", 
       # setting the hyperparameters to optimize
       hyper_parameters=[
           # DiscreteParameterRange(name='General/optimizer', values=['adam']),
