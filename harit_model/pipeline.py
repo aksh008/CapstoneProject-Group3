@@ -16,12 +16,12 @@ from harit_model.processing.data_manager import load_dataset, save_pipeline
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
-from clearml import Task
+from clearml import Task, TaskTypes
 
 task = Task.init(project_name='Harit_project_15Dec',task_name='training_task_1')
 
 parameters = {
-    'epoch': 1,
+    'epoch': 2,
     # 'neurons': 128,
     # 'hidden_layers':2,
     # 'activation': 'relu',

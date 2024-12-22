@@ -15,7 +15,8 @@ from harit_model.processing.validation import evaluate_model
 from harit_model.pipeline import train_mobilenetv2
 from harit_model.processing.features import train_test_valid
 from harit_model.config.core import TRAINED_MODEL_DIR
-from clearml import Task
+from clearml import Task, TaskTypes
+# from clearml import PipelineDecorator
 
 task = Task.init(project_name='Harit_project_15Dec',task_name='training_task_1')
 
@@ -36,7 +37,8 @@ def run_training() -> None:
                                                                                     batch_size=64)
     model = train_mobilenetv2(num_classes)
     
-    logdir = "logs/digits" + datetime.now().strftime("%Y%m%d-%H%M%S")
+    # logdir = "logs/digits" + datetime.now().strftime("%Y%m%d-%H%M%S")
+    logdir = "logs/digits/" + datetime.now().strftime("%Y%m%d-%H%M%S")
     callbacks_list = [tf.keras.callbacks.TensorBoard(log_dir=logdir),
                       tf.keras.callbacks.ModelCheckpoint("MyHarit_model_checkpoint.keras",save_best_only=True)]    
     # Train the model
