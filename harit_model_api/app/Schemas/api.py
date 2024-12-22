@@ -15,7 +15,7 @@ from harit_model import __version__ as model_version
 from harit_model.predict import make_prediction
 
 from app import __version__, schemas
-from app.config import settings
+from harit_model_api.app.config import settings
 
 api_router = APIRouter()
 
