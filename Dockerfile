@@ -23,3 +23,7 @@ EXPOSE 8000
 # CMD ["chainlit", "run" ,"app/main.py", "--host", "0.0.0.0"]
 CMD ["python", "app/main.py"]
 # CMD ["uvicorn", "harit_model_api.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
+
+
