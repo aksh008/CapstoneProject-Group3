@@ -14,10 +14,10 @@ optimizer = HyperParameterOptimizer(
       # setting the hyperparameters to optimize
       hyper_parameters=[
           # DiscreteParameterRange(name='General/optimizer', values=['adam']),
-          UniformParameterRange(name='General/learning_rate', min_value=0.01, max_value=0.2, step_size=0.05),
+          UniformParameterRange(name='General/learning_rate', min_value=0.01, max_value=0.1, step_size=0.05),
         #   UniformIntegerParameterRange(name='General/hidden_layers', min_value=1, max_value=3, step_size=1),
         #   UniformIntegerParameterRange(name='General/neurons', min_value=70, max_value=150, step_size=10),
-          UniformIntegerParameterRange(name='General/epoch', min_value=2, max_value=3, step_size=1),          
+          UniformIntegerParameterRange(name='General/epoch', min_value=1, max_value=3, step_size=1),          
           ],
       # setting the objective metric we want to maximize/minimize
       objective_metric_title='epoch_accuracy',
@@ -29,7 +29,7 @@ optimizer = HyperParameterOptimizer(
   
       # configuring optimization parameters
       max_number_of_concurrent_tasks=2,  
-      optimization_time_limit=120.,            # The maximum time (in minutes) for the entire optimization process
+      optimization_time_limit=360.,            # The maximum time (in minutes) for the entire optimization process
       execution_queue='default',              # Execution queue to use for launching Tasks
       )
 
