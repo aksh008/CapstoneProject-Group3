@@ -29,7 +29,7 @@ optimizer = HyperParameterOptimizer(
   
       # configuring optimization parameters
       max_number_of_concurrent_tasks=2,  
-      optimization_time_limit=30.,            # The maximum time (in minutes) for the entire optimization process
+      optimization_time_limit=120.,            # The maximum time (in minutes) for the entire optimization process
       execution_queue='default',              # Execution queue to use for launching Tasks
       )
 

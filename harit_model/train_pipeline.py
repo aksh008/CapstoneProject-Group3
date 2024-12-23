@@ -19,7 +19,7 @@ from clearml import Task, TaskTypes
 # from clearml import PipelineDecorator
 
 task = Task.init(project_name='Harit_project_15Dec',task_name='training_task_1')
-
+task.connect(parameters)
 
 
 def run_training() -> None:

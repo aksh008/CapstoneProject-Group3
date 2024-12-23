@@ -11,12 +11,13 @@ from harit_model.processing.features import train_test_valid
 from harit_model.processing.validation import evaluate_model
 from harit_model.config.core import config
 from harit_model.processing.data_manager import load_dataset, save_pipeline
+from tensorflow.keras.optimizers import get
 # from tensorflow.keras.optimizers import Adam
 
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
-from clearml import Task, TaskTypes
+# from clearml import Task, TaskTypes
 
 # task = Task.init(project_name='Harit_project_15Dec',task_name='training_task_1')
 
@@ -29,7 +30,7 @@ parameters = {
     'learning_rate':0.001
 }
 
-task.connect(parameters)
+
 
 def train_mobilenetv2(num_classes):
     """
@@ -60,7 +61,7 @@ def train_mobilenetv2(num_classes):
                     ])
 
     # Compile the model
-    model.compile(optimizer=parameters['optimizer'](lr=parameters['learning_rate']),
+    model.compile(optimizer=get(parameters['optimizer'])(lr=parameters['learning_rate']),
                   loss="categorical_crossentropy",
                   metrics=["accuracy"])
 
