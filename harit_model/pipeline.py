@@ -23,14 +23,8 @@ def train_mobilenetv2(num_classes):
     Returns:
         model: Compiled Keras model.
     """
-    try:
-        base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
-        base_model.trainable = False  # Freeze base layers  
-    except Exception as e:
-        print(f"Error loading MobileNetV2 weights: {e}")
-        print("Attempting to use model without pre-trained weights...")
-        base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights=None)
-        base_model.trainable = False  # Freeze base layers  
+    base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
+    base_model.trainable = False  # Freeze base layers  
 
     model = Sequential([
         base_model,
