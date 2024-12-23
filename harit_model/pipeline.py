@@ -1,48 +1,48 @@
-import sys
 from pathlib import Path
-file = Path(__file__).resolve()
-parent, root = file.parent, file.parents[1]
-sys.path.append(str(root))
+import sys
 
 import tensorflow as tf
-import os
-from harit_model.processing.features import train_test_valid
-from harit_model.processing.validation import evaluate_model
-from harit_model.config.core import config
-from harit_model.processing.data_manager import load_dataset, save_pipeline
-from tensorflow.keras.optimizers import Adam
-
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+from tensorflow.keras.optimizers import Adam
+
+from harit_model.config.core import config
+
+file = Path(__file__).resolve()
+root = file.parents[1]
+sys.path.append(str(root))
 
 def train_mobilenetv2(num_classes):
     """
-    Train the MobileNetV2 model on the dataset.
+    Create and compile the MobileNetV2 model.
 
     Args:
-        train_data: Training data generator.
-        valid_data: Validation data generator.
-        epochs (int): Number of epochs for training.
-        output_dir (str): Directory to save the trained model.
+        num_classes (int): Number of output classes.
 
     Returns:
-        model: Trained Keras model.
+        model: Compiled Keras model.
     """
-    # Load the MobileNetV2 model
-    base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
-    base_model.trainable = False  # Freeze base layers  
+    try:
+        base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
+        base_model.trainable = False  # Freeze base layers  
+    except Exception as e:
+        print(f"Error loading MobileNetV2 weights: {e}")
+        print("Attempting to use model without pre-trained weights...")
+        base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights=None)
+        base_model.trainable = False  # Freeze base layers  
+
     model = Sequential([
-                    base_model,
-                    GlobalAveragePooling2D(),
-                    Dense(256, activation='relu'),
-                    Dense(num_classes, activation='softmax')  # `num_classes` is the number of plant disease categories
-                    ])
+        base_model,
+        GlobalAveragePooling2D(),
+        Dense(256, activation='relu'),
+        Dense(num_classes, activation='softmax')
+    ])
 
-    # Compile the model
-    model.compile(optimizer=Adam(learning_rate=0.001),
-                  loss="categorical_crossentropy",
-                  metrics=["accuracy"])
-
+    model.compile(
+        optimizer=Adam(learning_rate=0.001),
+        loss="categorical_crossentropy",
+        metrics=["accuracy"]
+    )
 
     return model

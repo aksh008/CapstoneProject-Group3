@@ -1,86 +1,83 @@
-# Path setup, and access the config.yml file, datasets folder & trained models
 import sys
 from pathlib import Path
+
+# Path setup
 file = Path(__file__).resolve()
-parent, root = file.parent, file.parents[1]
+root = file.parents[1]
 sys.path.append(str(root))
 
-from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 from pydantic import BaseModel
 from strictyaml import YAML, load
 import harit_model
-
 # Project Directories
 PACKAGE_ROOT = Path(harit_model.__file__).resolve().parent
-ROOT = PACKAGE_ROOT.parent
 CONFIG_FILE_PATH = PACKAGE_ROOT / "config.yml"
-#print(CONFIG_FILE_PATH)
-
 DATASET_DIR = PACKAGE_ROOT / "dataset"
 TRAINED_MODEL_DIR = PACKAGE_ROOT / "trained_models"
-INDICES_DIR = PACKAGE_ROOT/"indices"
+INDICES_DIR = PACKAGE_ROOT / "indices"
 
+class KaggleHubConfig(BaseModel):
+    dataset: str
+    output_dir: str
 
 class AppConfig(BaseModel):
-    """
-    Application-level config.
-    """
-
     package_name: str
+    kagglehub: KaggleHubConfig
+    data_dir: str
+    test_data_dir: str
+    pipeline_name: str
     pipeline_save_file: str
-    data_dir:str
-    test_data_dir:str
 
 class ModelConfig(BaseModel):
-    """
-    All configuration relevant to model
-    training and feature engineering.
-    """
-
-    test_size:float
+    test_size: float
+    random_state: int
     epochs: int
     batch_size: int
 
 class Config(BaseModel):
-    """Master config object."""
     app_config: AppConfig
     model_config: ModelConfig
 
-
 def find_config_file() -> Path:
-    """Locate the configuration file."""
     if CONFIG_FILE_PATH.is_file():
         return CONFIG_FILE_PATH
     raise Exception(f"Config not found at {CONFIG_FILE_PATH!r}")
 
-
 def fetch_config_from_yaml(cfg_path: Path = None) -> YAML:
-    """Parse YAML containing the package configuration."""
-
     if not cfg_path:
         cfg_path = find_config_file()
 
     if cfg_path:
         with open(cfg_path, "r") as conf_file:
-            parsed_config = load(conf_file.read())
-            return parsed_config
+            return load(conf_file.read())
     raise OSError(f"Did not find config file at path: {cfg_path}")
 
-
 def create_and_validate_config(parsed_config: YAML = None) -> Config:
-    """Run validation on config values."""
     if parsed_config is None:
         parsed_config = fetch_config_from_yaml()
 
-    # specify the data attribute from the strictyaml YAML type.
-    _config = Config(
-        app_config=AppConfig(**parsed_config.data),
-        model_config=ModelConfig(**parsed_config.data),
+    # Separate app_config and model_config
+    app_config_data = {
+        "package_name": parsed_config.data["package_name"],
+        "kagglehub": parsed_config.data["kagglehub"],
+        "data_dir": parsed_config.data["data_dir"],
+        "test_data_dir": parsed_config.data["test_data_dir"],
+        "pipeline_name": parsed_config.data["pipeline_name"],
+        "pipeline_save_file": parsed_config.data["pipeline_save_file"],
+    }
+    
+    model_config_data = {
+        "test_size": parsed_config.data["test_size"],
+        "random_state": parsed_config.data["random_state"],
+        "epochs": parsed_config.data["epochs"],
+        "batch_size": parsed_config.data["batch_size"],
+    }
+
+    return Config(
+        app_config=AppConfig(**app_config_data),
+        model_config=ModelConfig(**model_config_data),
     )
-
-    return _config
-
 
 config = create_and_validate_config()
