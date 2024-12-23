@@ -15,13 +15,23 @@ from harit_model.processing.validation import evaluate_model
 from harit_model.pipeline import train_mobilenetv2
 from harit_model.processing.features import train_test_valid
 from harit_model.config.core import TRAINED_MODEL_DIR
-from clearml import Task, TaskTypes
+from clearml import Task, OutputModel
+
 # from clearml import PipelineDecorator
 
-task = Task.init(project_name='Harit_project_15Dec',task_name='training_task_1')
+task = Task.init(project_name='Harit_project_23Dec',task_name='training_task_1')
+task.set_progress(0)
+# task doing stuff
+task.set_progress(50)
+print(task.get_progress())
+# task doing more stuff
+task.set_progress(100)
+
+output_model = OutputModel(task=task, framework="tensorflow")
 task.connect(parameters)
+# a_task = Task.get_task(project_name='Harit_project_23Dec', task_name='training_task_1')
 
-
+# task.upload_artifact(name='Harit_data', artifact_object='harit_model/dataset')
 def run_training() -> None:
     
     """
