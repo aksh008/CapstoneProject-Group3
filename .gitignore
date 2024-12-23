@@ -176,3 +176,9 @@ __pycache__/
 *.h5
 *.model
 *.venv
+
+harit_model/dataset/New Plant Diseases Dataset(Augmented)/
+harit_model/dataset/test/test/
+harit_model_api/.chainlit/
+harit_model_api/app/.DS_Store
+/.vscode
