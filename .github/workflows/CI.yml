@@ -19,14 +19,19 @@ jobs:
         python-version: '3.10'
     - name: Install dependencies
       run: pip install -r requirements/requirements.txt
-    
-    - name: Login to ClearML and train the pipeline
+    - name: setup new runner
       env:
         CLEARML_WEB_HOST: ${{ secrets.CLEARML_WEB_HOST }}
         CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST}}
         CLEARML_FILES_HOST: ${{ secrets.CLEARML_FILES_HOST}}
         CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY}}
         CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY}}
+      run: pip -q install clearml-agent
+    - name: setupmatplotlib
+      run: export MPLBACKEND=TkAg
+    - name: start the new agent
+      run: clearml-agent daemon --queue default
+    - name: run the train pipeline on clearml runner
       run: python harit_model/train_pipeline.py
     - uses: actions/upload-artifact@v3
       with:
