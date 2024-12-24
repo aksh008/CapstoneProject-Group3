@@ -2,7 +2,7 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main
+      - akshay_test
   workflow_dispatch:
 
 
