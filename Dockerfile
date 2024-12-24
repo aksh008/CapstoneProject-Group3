@@ -33,7 +33,8 @@ RUN pip install -r requirements.txt
 EXPOSE 8000
 
 # Command to run the Streamlit application
-CMD ["chainlit", "run", "app/main.py", "--server.address=0.0.0.0", "--server.port=8000"]
+# CMD ["chainlit", "run", "app/main.py", "--server.address=0.0.0.0", "--server.port=8000"]
+CMD ["chainlit", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]
 
 
 
