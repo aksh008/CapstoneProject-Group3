@@ -17,13 +17,18 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # expose port for application
-EXPOSE 8001
+# EXPOSE 8001
 
 # start fastapi application
 # CMD ["chainlit", "run" ,"app/main.py", "--host", "0.0.0.0"]
-CMD ["python", "app/main.py"]
+# CMD ["python", "app/main.py"]
 # CMD ["uvicorn", "harit_model_api.app.main:app", "--host", "0.0.0.0", "--port", "8001"]
 
+# Expose the Streamlit default port
+EXPOSE 8000
+
+# Command to run the Streamlit application
+CMD ["chainlit", "run", "app/main.py", "--server.address=0.0.0.0", "--server.port=8000"]
 
 
 

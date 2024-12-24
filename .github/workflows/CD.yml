@@ -23,4 +23,4 @@ jobs:
       - name: Run Docker Container
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-        run: sudo docker run -it -d -p 8001:8001 --name harit-fastapi-container $DOCKER_USER/harit-fastapi:latest
+        run: sudo docker run -it -d -p 8000:8000 --name harit-fastapi-container $DOCKER_USER/harit-fastapi:latest
