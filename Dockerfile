@@ -4,6 +4,11 @@ FROM python:3.10
 # copy application files
 ADD ./harit_model_api /harit_model_api/
 
+# copy chainlit config and public folders
+COPY .chainlit /harit_model_api/.chainlit
+COPY public /harit_model_api/public
+
+
 # specify working directory
 WORKDIR /harit_model_api
 
