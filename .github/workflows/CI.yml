@@ -2,7 +2,7 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - akshay_test
+      - main
   workflow_dispatch:
 
 
@@ -19,32 +19,39 @@ jobs:
         python-version: '3.10'
     - name: Install dependencies
       run: pip install -r requirements/requirements.txt
-    - name: Train and save pipeline
+    
+    - name: Login to ClearML and train the pipeline
+      env:
+        CLEARML_WEB_HOST: ${{ secrets.CLEARML_WEB_HOST }}
+        CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST}}
+        CLEARML_FILES_HOST: ${{ secrets.CLEARML_FILES_HOST}}
+        CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY}}
+        CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY}}
       run: python harit_model/train_pipeline.py
     - uses: actions/upload-artifact@v3
       with:
         name: my-trained-pipeline
         path: harit_model/trained_models
 
-#   test:
-#     needs: train
-#     runs-on: ubuntu-latest
-#     strategy:
-#       fail-fast: false
-#     steps:
-#     - uses: actions/checkout@v3
-#     - name: Set up Python 3.10
-#       uses: actions/setup-python@v3
-#       with:
-#         python-version: '3.10'
-#     - uses: actions/download-artifact@v3
-#       with:
-#         name: my-trained-pipeline
-#         path: harit_model/trained_models
-#     - name: Install dependencies
-#       run: pip install -r requirements/test_requirements.txt
-#     - name: Test with pytest
-#       run: pytest
+  # test:
+  #   needs: train
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Set up Python 3.10
+  #     uses: actions/setup-python@v3
+  #     with:
+  #       python-version: '3.10'
+  #   - uses: actions/download-artifact@v3
+  #     with:
+  #       name: my-trained-pipeline
+  #       path: harit_model/trained_models
+  #   - name: Install dependencies
+  #     run: pip install -r requirements/test_requirements.txt
+  #   - name: Test with pytest
+  #     run: pytest
 
   build:
     needs: [train]
@@ -71,7 +78,7 @@ jobs:
         path: dist/*.whl
 
   push-image:
-    needs: [train, build]
+    needs: [train,build]
     runs-on: ubuntu-latest
     steps:
     - name: Repo Checkout
