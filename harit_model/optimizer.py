@@ -3,18 +3,18 @@ from clearml.automation import UniformParameterRange, UniformIntegerParameterRan
 from clearml.automation import GridSearch, RandomSearch, HyperParameterOptimizer
 
 task = Task.init(
-    project_name='Harit_project_15Dec',
-    task_name='optimizer_task_22nd DEC',
+    project_name='Harit_project_23Dec',
+    task_name='optimizer_task_23rd DEC',
     task_type=Task.TaskTypes.optimizer,
 )
 
 optimizer = HyperParameterOptimizer(
       # specifying the task to be optimized, task must be in system already so it can be cloned
-      base_task_id="36406f5a19b84ab6a50801bbc1a733dd", 
+      base_task_id="1896685a258f43248f0cf1fc0d50d9ba", 
       # setting the hyperparameters to optimize
       hyper_parameters=[
           # DiscreteParameterRange(name='General/optimizer', values=['adam']),
-          UniformParameterRange(name='General/learning_rate', min_value=0.01, max_value=0.1, step_size=0.05),
+          UniformParameterRange(name='General/learning_rate', min_value=0.001, max_value=0.003, step_size=0.001),
         #   UniformIntegerParameterRange(name='General/hidden_layers', min_value=1, max_value=3, step_size=1),
         #   UniformIntegerParameterRange(name='General/neurons', min_value=70, max_value=150, step_size=10),
           UniformIntegerParameterRange(name='General/epoch', min_value=1, max_value=3, step_size=1),          
