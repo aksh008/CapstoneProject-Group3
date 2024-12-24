@@ -17,12 +17,12 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # expose port for application
-EXPOSE 8000
+EXPOSE 8001
 
 # start fastapi application
 # CMD ["chainlit", "run" ,"app/main.py", "--host", "0.0.0.0"]
 CMD ["python", "app/main.py"]
-# CMD ["uvicorn", "harit_model_api.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# CMD ["uvicorn", "harit_model_api.app.main:app", "--host", "0.0.0.0", "--port", "8001"]
 
 
 
