@@ -30,9 +30,8 @@ jobs:
         CLEARML_FILES_HOST: ${{ secrets.CLEARML_FILES_HOST}}
         CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY}}
         CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY}}
-      run: clearml-agent daemon --queue default
-    - name: run the train pipeline on clearml runner
-      run: python harit_model/train_pipeline.py
+      run: |
+        clearml-agent execute --queue default --project-name harit_model --task-name optimizer
     - uses: actions/upload-artifact@v3
       with:
         name: my-trained-pipeline
