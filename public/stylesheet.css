@@ -1,0 +1,20 @@
+body {
+    background-color: rgb(7, 7, 7) !important; /* This is just to test if CSS is loading */
+}
+
+/* If that works, then try this */
+body {
+    background-image: url('../public/background.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+.message {
+    background-color: rgba(var(--background-rgb), 0.7) !important;
+}
+
+.chat-container {
+    background: transparent !important;
+}
