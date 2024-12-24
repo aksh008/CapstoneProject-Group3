@@ -5,6 +5,7 @@ kagglehub
 strictyaml
 chainlit==1.3.2
 joblib
+wheel
 pyyaml
 openai
 fastapi==0.115.6
