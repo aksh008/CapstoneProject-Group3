@@ -47,7 +47,7 @@ jobs:
 #       run: pytest
 
   build:
-    needs: [train, test]
+    needs: [train]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -71,7 +71,7 @@ jobs:
         path: dist/*.whl
 
   push-image:
-    needs: [train, test, build]
+    needs: [train, build]
     runs-on: ubuntu-latest
     steps:
     - name: Repo Checkout
