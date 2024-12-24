@@ -1,54 +1,51 @@
 import unittest
 import pandas as pd
 import numpy as np
-from feature import embarkImputer, Mapper, age_col_tfr
+import sys
+import os
 
-class TestEmbarkImputer(unittest.TestCase):
+import pytest
+import numpy as np
 
-    def test_impute_mode(self):
-        data = {'Embarked': ['S', 'C', 'Q', np.nan, 'S']}
-        df = pd.DataFrame(data)
-        imputer = embarkImputer(variables='Embarked')
-        imputer.fit(df)
-        result = imputer.transform(df)
-        expected_mode = df['Embarked'].mode()[0]
-        self.assertEqual(result['Embarked'].iloc[3], expected_mode)
+from harit_model import __version__ as _version
+from harit_model.config.core import config, TRAINED_MODEL_DIR, INDICES_DIR
+from harit_model.processing.features import preprocess_image
+from harit_model.processing.data_manager import load_pipeline
+# Sample Test Data (Modify based on your use case)
+@pytest.fixture
 
-    def test_invalid_variable_type(self):
-        with self.assertRaises(ValueError):
-            embarkImputer(variables=123)
+img_array = preprocess_image(img_path)
+@pytest.fixture
+def sample_features():
+    # Mock a feature vector
+    return np.random.rand(128)
 
-class TestMapper(unittest.TestCase):
+# Test: Image Preprocessing
+def test_preprocess_image(sample_image):
+    processed_image = preprocess_image(sample_image)
+    assert processed_image.shape == (224, 224, 3), "Preprocessed image should have the correct dimensions."
+    assert processed_image.dtype == np.float32, "Preprocessed image should be normalized to float32."
 
-    def test_mapping(self):
-        data = {'Embarked': ['S', 'C', 'Q']}
-        df = pd.DataFrame(data)
-        mappings = {'S': 1, 'C': 2, 'Q': 3}
-        mapper = Mapper(variables='Embarked', mappings=mappings)
-        result = mapper.transform(df)
-        expected = [1, 2, 3]
-        self.assertListEqual(result['Embarked'].tolist(), expected)
+# Test: Feature Extraction
+def test_extract_features(sample_image):
+    features = extract_features(sample_image)
+    assert isinstance(features, np.ndarray), "Extracted features should be a numpy array."
+    assert len(features) > 0, "Feature vector should not be empty."
 
-    def test_invalid_variable_type(self):
-        with self.assertRaises(ValueError):
-            Mapper(variables=123, mappings={'S': 1})
+# Test: Classification
+def test_classify_plant(sample_features):
+    prediction = classify_plant(sample_features)
+    assert isinstance(prediction, str), "Classification result should be a string."
+    assert prediction in ["Plant A", "Plant B", "Plant C"], "Prediction should match expected class labels."
 
-class TestAgeColTfr(unittest.TestCase):
+# Test: End-to-End Pipeline
+def test_pipeline(sample_image):
+    processed_image = preprocess_image(sample_image)
+    features = extract_features(processed_image)
+    prediction = classify_plant(features)
+    
+    assert isinstance(prediction, str), "Pipeline output should be a string."
+    assert prediction in ["Plant A", "Plant B", "Plant C"], "Pipeline prediction should be valid."
 
-    def test_age_transformation(self):
-        np.random.seed(42)
-        data = {'Age': [22, 25, np.nan, 24, np.nan]}
-        df = pd.DataFrame(data)
-        age_transformer = age_col_tfr(variables='Age')
-        age_transformer.fit(df)
-        result = age_transformer.transform(df)
-        self.assertFalse(result['Age'].isnull().any())
-        self.assertTrue((result['Age'].iloc[2] >= (df['Age'].mean() - df['Age'].std())) and 
-                        (result['Age'].iloc[2] <= (df['Age'].mean() + df['Age'].std())))
-
-    def test_invalid_variable_type(self):
-        with self.assertRaises(ValueError):
-            age_col_tfr(variables=123)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
