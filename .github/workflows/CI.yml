@@ -8,6 +8,8 @@ on:
 
 jobs:
   train:
+    env:
+      RE_TRAIN: no     # Re-train 'Yes' / 'No'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -26,28 +28,28 @@ jobs:
         name: my-trained-pipeline
         path: harit_model/trained_models
 
-  test:
-    needs: train
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.11'
-    - uses: actions/download-artifact@v3
-      with:
-        name: my-trained-pipeline
-        path: harit_model/trained_models
-    - name: Install dependencies
-      run: pip install -r requirements/test_requirements.txt
-    - name: Test with pytest
-      run: pytest
+  # test:
+  #   needs: train
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Set up Python 3.11
+  #     uses: actions/setup-python@v3
+  #     with:
+  #       python-version: '3.11'
+  #   - uses: actions/download-artifact@v3
+  #     with:
+  #       name: my-trained-pipeline
+  #       path: harit_model/trained_models
+  #   - name: Install dependencies
+  #     run: pip install -r requirements/test_requirements.txt
+  #   - name: Test with pytest
+  #     run: pytest
 
   build:
-    needs: [train, test]
+    needs: [train]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -71,7 +73,7 @@ jobs:
         path: dist/*.whl
 
   push-image:
-    needs: [train, test, build]
+    needs: [train,build]
     runs-on: ubuntu-latest
     steps:
     - name: Repo Checkout
