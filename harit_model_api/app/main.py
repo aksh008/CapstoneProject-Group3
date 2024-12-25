@@ -43,7 +43,7 @@ def get_chatgpt_diagnosis(disease):
 
 @cl.on_chat_start
 async def start():
-    await cl.Message(content="Welcome to PlantCure! Please upload an image of a plant with text", author="plantcure").send()
+    await cl.Message(content="Welcome To Harit Bot !! \nPlease upload the Image of the Plant and your query to get the Plant Disease information.", author="plantcure").send()
 
 @cl.on_message
 async def process_message(msg: cl.Message):
@@ -65,8 +65,9 @@ async def process_message(msg: cl.Message):
 
     if msg.content:
         plain_text = msg.content.strip()
-
-    if not valid_images and not plain_text:
+    
+    # TODO: enhancement add tchange to forward it to chatgpt if image is not added
+    if not valid_images:
         await cl.Message(
             content="Invalid input. Please upload an image file or provide text input.",
             author="plantcure"
