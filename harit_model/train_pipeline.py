@@ -15,15 +15,17 @@ from pipeline import parameters
 from datetime import datetime
 import tensorflow as tf
 
-task = Task.init(project_name='Harit_project_23Dec',task_name='training_task_1')
-task.set_progress(0)
-# task doing stuff
-task.set_progress(50)
-print(task.get_progress())
-# task doing more stuff
-task.set_progress(100)
+task = Task.init(project_name='Harit_project_23Dec',task_name='training_task_25th dec')
 
-output_model = OutputModel(task=task, framework="tensorflow")
+
+# task.set_progress(0)
+# task doing stuff
+# task.set_progress(50)
+# print(task.get_progress())
+# task doing more stuff
+# task.set_progress(100)
+
+# output_model = OutputModel(task=task, framework="tensorflow")
 task.connect(parameters)
 
 def run_training() -> None:
