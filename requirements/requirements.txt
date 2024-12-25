@@ -10,7 +10,7 @@ joblib
 pyyaml
 openai
 fastapi==0.115.6
-pydantic
+pydantic>=2.0
 scikit-learn
 matplotlib
 seaborn
