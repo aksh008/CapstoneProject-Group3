@@ -7,25 +7,25 @@ on:
 
 
 jobs:
-#   train:
+  train:
     
-#     runs-on: ubuntu-latest
-#     strategy:
-#       fail-fast: false
-#     steps:
-#     - uses: actions/checkout@v3
-#     - name: Set up Python 3.11
-#       uses: actions/setup-python@v3
-#       with:
-#         python-version: '3.11'
-#     - name: Install dependencies
-#       run: pip install -r requirements/requirements.txt
-#     - name: Train and save pipeline
-#       run: python harit_model/train_pipeline.py
-#     - uses: actions/upload-artifact@v3
-#       with:
-#         name: my-trained-pipeline
-#         path: harit_model/trained_models
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: pip install -r requirements/requirements.txt
+    - name: Train and save pipeline
+      run: python harit_model/train_pipeline.py
+    - uses: actions/upload-artifact@v3
+      with:
+        name: my-trained-pipeline
+        path: harit_model/trained_models
 
   # test:
   #   needs: train
@@ -48,7 +48,7 @@ jobs:
   #     run: pytest
 
   build:
-    needs: []
+    needs: [train]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -72,7 +72,7 @@ jobs:
         path: dist/*.whl
 
   push-image:
-    needs: [build]
+    needs: [train, build]
     runs-on: ubuntu-latest
     steps:
     - name: Repo Checkout
