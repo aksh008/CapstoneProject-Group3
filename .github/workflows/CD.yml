@@ -23,4 +23,6 @@ jobs:
       - name: Run Docker Container
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-        run: sudo docker run -it -d -p 8000:8000 --name harit-fastapi-container $DOCKER_USER/harit-fastapi:latest
+          LITERAL_API_KEY: ${{ secrets.LITERAL_API_KEY }}          
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: sudo docker run -e LITERAL_API_KEY=LITERAL_API_KEY -e OPENAI_API_KEY=OPENAI_API_KEY -it -d -p 8000:8000 --name harit-fastapi-container $DOCKER_USER/harit-fastapi:latest
