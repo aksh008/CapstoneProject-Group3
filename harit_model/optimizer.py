@@ -3,11 +3,10 @@ from clearml.automation import UniformParameterRange, UniformIntegerParameterRan
 from clearml.automation import GridSearch, RandomSearch, HyperParameterOptimizer
 
 task = Task.init(
-    project_name='Harit_project_23Dec',
-    task_name='optimizer_task_23rd DEC',
+    project_name='Harit_project_25Dec',
+    task_name='optimizer_task_25 DEC',
     task_type=Task.TaskTypes.optimizer,
 )
-
 optimizer = HyperParameterOptimizer(
       # specifying the task to be optimized, task must be in system already so it can be cloned
       base_task_id="dcadcd28ca7b46bc8cae79d6d780b9ba", 
