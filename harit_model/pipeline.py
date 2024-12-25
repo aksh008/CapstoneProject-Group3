@@ -6,12 +6,23 @@ from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import get
 
 from harit_model.config.core import config
 
 file = Path(__file__).resolve()
 root = file.parents[1]
 sys.path.append(str(root))
+
+parameters = {
+    'epoch': 2,
+    # 'neurons': 128,
+    # 'hidden_layers':2,
+    # 'activation': 'relu',
+    'optimizer': 'Adam',
+    'learning_rate':0.001
+}
+
 
 def train_mobilenetv2(num_classes):
     """
@@ -34,7 +45,7 @@ def train_mobilenetv2(num_classes):
     ])
 
     model.compile(
-        optimizer=Adam(learning_rate=0.001),
+        optimizer=get(parameters['optimizer'])(lr=parameters['learning_rate']),
         loss="categorical_crossentropy",
         metrics=["accuracy"]
     )
