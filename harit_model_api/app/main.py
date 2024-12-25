@@ -94,13 +94,20 @@ async def process_message(msg: cl.Message):
                 shutil.copyfileobj(file_content, buffer)
                 
             results = make_prediction(file_path)
-            response = get_chatgpt_diagnosis(results)
-
-            await cl.Message(
-                content=f"{response.choices[0].message.content}",
+            plant_name, disease_name = results.split('___')
+            is_healthy = disease_name.lower() == 'healthy'
+            if is_healthy:
+                await cl.Message(
+                content=f"Plant name : {plant_name} and Plant leafs are healthy",
                 author="plantcure"
-            ).send()
-            
+                ).send()
+            else:
+                response = get_chatgpt_diagnosis(results)
+                await cl.Message(
+                    content=f"{response.choices[0].message.content}",
+                    author="plantcure"
+                ).send()
+                
             file_content.close()
 
         except Exception as e:

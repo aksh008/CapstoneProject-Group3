@@ -56,7 +56,7 @@ edit_message = true
 # Name of the assistant.
 name = "PlantCure"
 favicon = "public/favicon.ico"
-custom_css = '\public\stylesheet.css'
+custom_css = '/public/stylesheet.css'
 
 # Description of the assistant. This is used for HTML tags.
 # description = ""
