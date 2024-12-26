@@ -39,11 +39,21 @@ def train_mobilenetv2(num_classes):
     base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
     base_model.trainable = False  # Freeze base layers  
 
-    input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
-    task.connect(input_model)
+    # input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
+    # task.connect(input_model)
 
+    input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
+    local_path = input_model.get_local_copy()
+
+    try:
+        # Try to load the model as a full Keras model
+        ks_model = tf.keras.models.load_model(local_path)
+    except Exception as e:
+        print(f"Could not load full model: {e}")
+        print("Loading weights and rebuilding architecture.")
+    task.connect(ks_model)
     model = Sequential([
-        input_model,
+        ks_model,
         GlobalAveragePooling2D(),
         Dense(256, activation='relu'),
         Dense(num_classes, activation='softmax')
