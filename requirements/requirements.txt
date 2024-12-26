@@ -10,7 +10,7 @@ joblib
 pyyaml
 openai
 fastapi==0.115.6
-pydantic==2.0
+pydantic>1,<2
 pydantic_core==2.0.1
 scikit-learn
 matplotlib
