@@ -19,8 +19,8 @@ def save_pipeline(pipeline_to_persist) -> None:
     save_path = TRAINED_MODEL_DIR / save_file_name
 
     remove_old_pipelines(files_to_keep=[save_file_name])
-    # joblib.dump(pipeline_to_persist, save_path)
-    pipeline_to_persist.save(save_path, save_format="tf")
+    joblib.dump(pipeline_to_persist, save_path)
+    # pipeline_to_persist.save(save_path, save_format="tf")
     
 def remove_old_pipelines(*, files_to_keep: t.List[str]) -> None:
     """Remove old model pipelines."""

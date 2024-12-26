@@ -9,9 +9,9 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import get
 from clearml import Task, OutputModel, InputModel
 from tensorflow.keras.models import load_model
-# # from train_pipeline import task
+# # # from train_pipeline import task
 
-# from harit_model.config.core import config
+# # from harit_model.config.core import config
 
 file = Path(__file__).resolve()
 root = file.parents[1]
@@ -45,9 +45,15 @@ def train_mobilenetv2(num_classes):
     #     Dense(256, activation='relu'),
     #     Dense(38, activation='softmax')  # Adjust the number of classes as needed
     #     ])
-    # input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
-    # task.connect(input_model)
-    model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
+    input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
+    task.connect(input_model)
+    model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.keras")
+    print("finally Model loaded successfully!")
+    # Save as TensorFlow SavedModel
+    # saved_model_dir = "C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.tf"
+    # model.save(saved_model_dir, save_format="tf")
+    # model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.tf")
+    
     # input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
     # local_path = input_model.get_local_copy()
     # print(local_path)
@@ -99,6 +105,12 @@ def train_mobilenetv2(num_classes):
 #     # model.load_weights("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
 #     # print("Weights loaded successfully!")
 #     model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
+#     # Save as TensorFlow SavedModel
+#     saved_model_dir = "C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.keras"
+#     model.save(saved_model_dir)
+#     # model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.tf")
+#     reloaded_model = tf.keras.models.load_model(saved_model_dir)
+#     # model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
 #     print("finally Model loaded successfully!")
-# except Exception as e:
-#     print(f"Could not load weights: {e}")
+# # except Exception as e:
+# #     print(f"Could not load weights: {e}")
