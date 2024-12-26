@@ -1,70 +1,70 @@
-from pathlib import Path
 import sys
-
-import tensorflow as tf
-from tensorflow.keras.applications import MobileNetV2
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
-# from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.optimizers import get
-from clearml import Task, OutputModel, InputModel
-# from train_pipeline import task
-
-from harit_model.config.core import config
-
+from pathlib import Path
 file = Path(__file__).resolve()
-root = file.parents[1]
+parent, root = file.parent, file.parents[1]
 sys.path.append(str(root))
 
-parameters = {
-    'epoch': 2,
-    # 'neurons': 128,
-    # 'hidden_layers':2,
-    # 'activation': 'relu',
-    'optimizer': 'Adam',
-    'learning_rate':0.001
-}
+from harit_model.config.core import config
+from harit_model.processing.data_manager import load_dataset, save_pipeline
+from harit_model.processing.validation import evaluate_model
+from harit_model.pipeline_retrain import train_mobilenetv2
+from harit_model.processing.features import train_test_valid
+
+from clearml import Task, OutputModel
+from pipeline_retrain import parameters
+from datetime import datetime
+import tensorflow as tf
 
 task = Task.init(project_name='Harit_project_25Dec',task_name='training_task_25th dec')
-def train_mobilenetv2(num_classes):
-    """
-    Create and compile the MobileNetV2 model.
 
-    Args:
-        num_classes (int): Number of output classes.
 
-    Returns:
-        model: Compiled Keras model.
-    """
-    # base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
-    # base_model.trainable = False  # Freeze base layers  
+# task.set_progress(0)
+# task doing stuff
+# task.set_progress(50)
+# print(task.get_progress())
+# task doing more stuff
+# task.set_progress(100)
 
-    # input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
-    # task.connect(input_model)
+# output_model = OutputModel(task=task, framework="tensorflow")
+task.connect(parameters)
 
-    input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
-    local_path = input_model.get_local_copy()
-    ks_model = None
-    try:
-        # Try to load the model as a full Keras model
-        ks_model = tf.keras.models.load_model(local_path)
-    except Exception as e:
-        print(f"Could not load full model: {e}")
-        print("Loading weights and rebuilding architecture.")
-    task.connect(ks_model)
-    # model = Sequential([
-    #     ks_model,
-    #     GlobalAveragePooling2D(),
-    #     Dense(256, activation='relu'),
-    #     Dense(num_classes, activation='softmax')
-    # ])
-    optimizer = get(parameters['optimizer'])
-    optimizer.learning_rate = parameters['learning_rate']  # Set learning rate directly
+def run_training() -> None:
+    """Train the model."""
     
-    ks_model.compile(
-        optimizer=optimizer,
-        loss="categorical_crossentropy",
-        metrics=["accuracy"]
+    # Download dataset
+    load_dataset()
+    
+    # Prepare data
+    _, train_data, test_data, valid_data, num_classes = train_test_valid(
+        config.app_config.data_dir,
+        target_size=(224, 224),
+        batch_size=config.model_config.batch_size
+    )
+    
+    # Create and train model
+    model = train_mobilenetv2(num_classes)
+    print("Training the MobileNetV2 model...")
+
+    logdir = "logs/digits/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+    callbacks_list = [tf.keras.callbacks.TensorBoard(log_dir=logdir),
+                      tf.keras.callbacks.ModelCheckpoint("MyHarit_model_checkpoint.keras",save_best_only=True)]    
+    # Train the model
+    model.fit(
+        train_data,
+        validation_data=valid_data,
+        epochs=parameters['epoch'],
+        callbacks=callbacks_list,
+        batch_size=config.model_config.batch_size
     )
 
-    return ks_model
+    # Evaluate model
+    test_loss, test_acc = evaluate_model(model, test_data)
+    
+    # Save trained model
+    save_pipeline(model)
+    
+    # Print results
+    print(f'Test Accuracy: {test_acc:.4f}, Test Loss: {test_loss:.4f}')
+
+if __name__ == "__main__":
+    run_training()
