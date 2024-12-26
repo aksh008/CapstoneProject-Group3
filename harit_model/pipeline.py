@@ -39,7 +39,7 @@ def train_mobilenetv2(num_classes):
     base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
     base_model.trainable = False  # Freeze base layers  
 
-    input_model = InputModel(model_id="63d2b85e540d44499beeccf18bb8e198")
+    input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
     task.connect(input_model)
 
     model = Sequential([
