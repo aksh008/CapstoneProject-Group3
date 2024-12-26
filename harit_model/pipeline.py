@@ -47,7 +47,7 @@ def train_mobilenetv2(num_classes):
     optimizer.learning_rate = parameters['learning_rate']  # Set learning rate directly
     
     model.compile(
-        optimizer=get(parameters['optimizer'])(lr=parameters['learning_rate']),
+        optimizer=optimizer,
         loss="categorical_crossentropy",
         metrics=["accuracy"]
     )
