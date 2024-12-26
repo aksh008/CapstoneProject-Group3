@@ -8,7 +8,7 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 # from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.optimizers import get
 from clearml import Task, OutputModel, InputModel
-from train_pipeline import task
+# from train_pipeline import task
 
 from harit_model.config.core import config
 
@@ -25,7 +25,7 @@ parameters = {
     'learning_rate':0.001
 }
 
-
+task = Task.init(project_name='Harit_project_25Dec',task_name='training_task_25th dec')
 def train_mobilenetv2(num_classes):
     """
     Create and compile the MobileNetV2 model.
