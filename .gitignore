@@ -186,3 +186,4 @@ harit_model_api/.chainlit/
 harit_model_api/app/.DS_Store
 /.vscode
 *.logs
+/logs/
