@@ -7,6 +7,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 # from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.optimizers import get
+from clearml import Task, OutputModel, InputModel
+from train_pipeline import task
 
 from harit_model.config.core import config
 
@@ -37,8 +39,11 @@ def train_mobilenetv2(num_classes):
     base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
     base_model.trainable = False  # Freeze base layers  
 
+    input_model = InputModel(model_id="63d2b85e540d44499beeccf18bb8e198")
+    task.connect(input_model)
+
     model = Sequential([
-        base_model,
+        input_model,
         GlobalAveragePooling2D(),
         Dense(256, activation='relu'),
         Dense(num_classes, activation='softmax')
