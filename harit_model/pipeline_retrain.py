@@ -44,6 +44,7 @@ def train_mobilenetv2(num_classes):
 
     input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
     local_path = input_model.get_local_copy()
+    print(local_path)
     ks_model = None
     try:
         # Try to load the model as a full Keras model
