@@ -36,27 +36,35 @@ def train_mobilenetv2(num_classes):
     Returns:
         model: Compiled Keras model.
     """
-    base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
-    base_model.trainable = False  # Freeze base layers  
+    # base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
+    # base_model.trainable = False  # Freeze base layers  
 
     # input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
     # task.connect(input_model)
 
-    
-
-    model = Sequential([
-        base_model,
-        GlobalAveragePooling2D(),
-        Dense(256, activation='relu'),
-        Dense(num_classes, activation='softmax')
-    ])
+    input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
+    local_path = input_model.get_local_copy()
+    ks_model = None
+    try:
+        # Try to load the model as a full Keras model
+        ks_model = tf.keras.models.load_model(local_path)
+    except Exception as e:
+        print(f"Could not load full model: {e}")
+        print("Loading weights and rebuilding architecture.")
+    task.connect(ks_model)
+    # model = Sequential([
+    #     ks_model,
+    #     GlobalAveragePooling2D(),
+    #     Dense(256, activation='relu'),
+    #     Dense(num_classes, activation='softmax')
+    # ])
     optimizer = get(parameters['optimizer'])
     optimizer.learning_rate = parameters['learning_rate']  # Set learning rate directly
     
-    model.compile(
+    ks_model.compile(
         optimizer=optimizer,
         loss="categorical_crossentropy",
         metrics=["accuracy"]
     )
 
-    return model
+    return ks_model
