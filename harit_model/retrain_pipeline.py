@@ -15,7 +15,7 @@ from pipeline_retrain import parameters
 from datetime import datetime
 import tensorflow as tf
 
-task = Task.init(project_name='Harit_project_25Dec',task_name='training_task_25th dec')
+task = Task.init(project_name='Harit_project_26Dec',task_name='training_task_26th dec')
 
 
 # task.set_progress(0)
