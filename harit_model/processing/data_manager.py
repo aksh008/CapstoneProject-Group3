@@ -8,7 +8,7 @@ import shutil
 #from harit_model.dataset.download_data import download_dataset
 from harit_model.config.core import TRAINED_MODEL_DIR, config
 from harit_model import __version__ as _version
-from harit_model.download_clearml_data import download_dataset
+from processing.download_clearml_data import download_dataset
 
 file = Path(__file__).resolve()
 root = file.parents[1]
