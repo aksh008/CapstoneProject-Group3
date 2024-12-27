@@ -188,3 +188,4 @@ harit_model_api/app/.DS_Store
 *.logs
 /logs/
 Newdata
+harit_model/logs/*

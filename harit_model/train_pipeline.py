@@ -32,6 +32,7 @@ def run_training() -> None:
     """Train the model."""
     
     # Download dataset
+    print("invoking load_dataset from datamanager")
     load_dataset()
     
     # Prepare data
