@@ -8,15 +8,15 @@ if __name__ == "__main__":
     print(parent_datasets.id)
     # parent_dataset = Dataset.get(dataset_name="existing_dataset_name", project_name="your_project_name")
     dataset = Dataset.create(
-        dataset_name="Harit_Kaggledata_new",
+        dataset_name="Harit_Kaggledata",
         parent_datasets=[parent_datasets.id],
-        dataset_version="1.0.1"
+        dataset_version="1.0.2"
     )
     # Add files to the dataset
-    dataset.add_files(r"C:\Akshay\AIMLOps24\Capstone Project\akshay_25dec\CapstoneProject-Group3\Newdata\leaf.jpg")
+    dataset.add_files(r"C:\Akshay\AIMLOps24\Capstone Project\akshay_25dec\CapstoneProject-Group3\Newdata\train")
 
     # Upload the dataset to ClearML
     dataset.upload()  # Use upload to add the files to the ClearML server
     dataset.finalize()  # Finalize the dataset to make it immutable
 
-    print(f"Dataset '{dataset_name}' version uploaded successfully.")
+    # print(f"Dataset '{dataset_name}' version uploaded successfully.")
