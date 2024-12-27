@@ -7,10 +7,11 @@ import os
 def download_dataset():
     kagglehub_config = config.app_config.kagglehub
     dataset = kagglehub_config.dataset
-    output_dir = Path(kagglehub_config.output_dir)
+    #output_dir = Path(kagglehub_config.output_dir)
 
+    #print("output_dir::", output_dir)
     # Ensure output directory exists
-    os.makedirs(output_dir,  exist_ok=True)
+    #os.makedirs(output_dir,  exist_ok=True)
 
     # Download the dataset
     print(f"Downloading dataset: {dataset}")

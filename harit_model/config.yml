@@ -6,6 +6,11 @@ kagglehub:
   dataset: "vipoooool/new-plant-diseases-dataset"
   output_dir: "./dataset"
 
+clearml:
+  project: "Harit_CapStone_Project"
+  dataset: Harit_DataSet
+  output_dir: "./haritdataset"
+
 # Data Files
 data_dir: ./dataset/New Plant Diseases Dataset(Augmented)/New Plant Diseases Dataset(Augmented)/
 test_data_dir: ./dataset/test/

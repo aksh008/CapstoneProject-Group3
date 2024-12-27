@@ -7,8 +7,8 @@ if __name__ == "__main__":
 
     dataset = Dataset.get(
         dataset_id=None,  
-        dataset_project="Harit_project_23Dec",
-        dataset_name="Harit_Kaggledata",
+        dataset_project="Harit_CapStone_Project",
+        dataset_name="Harit_DataSet",
         # dataset_tags="my tag",
         # dataset_version="1.2",
         only_completed=True, 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     # Download the dataset to a local directory
     local_path = dataset.get_mutable_local_copy(
-        target_folder=r"C:\Akshay\AIMLOps24\Capstone Project\akshay_25dec\CapstoneProject-Group3\Newdata\train",
+        target_folder=r"/Users/hemanth/Downloads/Capstonedata",
         overwrite=True,
     )
 

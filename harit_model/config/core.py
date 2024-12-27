@@ -21,10 +21,17 @@ INDICES_DIR = PACKAGE_ROOT / "indices"
 class KaggleHubConfig(BaseModel):
     dataset: str
     output_dir: str
+   
+class ClearMLConfig(BaseModel):
+    project: str
+    dataset: str
+    output_dir: str   
+    
 
 class AppConfig(BaseModel):
     package_name: str
     kagglehub: KaggleHubConfig
+    clearmlconfig: ClearMLConfig
     data_dir: str
     test_data_dir: str
     pipeline_name: str
@@ -62,6 +69,7 @@ def create_and_validate_config(parsed_config: YAML = None) -> Config:
     app_config_data = {
         "package_name": parsed_config.data["package_name"],
         "kagglehub": parsed_config.data["kagglehub"],
+        "clearmlconfig" : parsed_config.data["clearml"]
         "data_dir": parsed_config.data["data_dir"],
         "test_data_dir": parsed_config.data["test_data_dir"],
         "pipeline_name": parsed_config.data["pipeline_name"],
