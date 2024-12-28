@@ -1,13 +1,10 @@
-from pathlib import Path
 import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
 import tensorflow as tf
 from PIL import Image, ImageEnhance
-
-file = Path(__file__).resolve()
-root = file.parents[1]
-sys.path.append(str(root))
 
 def is_image(image_path):
     try:

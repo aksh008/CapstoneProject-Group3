@@ -1,17 +1,15 @@
 import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from pathlib import Path
 import typing as t
 import joblib
-import os
 import shutil
 
 from harit_model.processing.download_data import download_dataset
 from harit_model.config.core import TRAINED_MODEL_DIR, config
 from harit_model import __version__ as _version
-
-file = Path(__file__).resolve()
-root = file.parents[1]
-sys.path.append(str(root))
 
 def save_pipeline(pipeline_to_persist) -> None:
     """Persist the pipeline."""

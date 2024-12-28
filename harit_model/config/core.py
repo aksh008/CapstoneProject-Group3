@@ -1,11 +1,7 @@
-
-import sys
 from pathlib import Path
-
-# Path setup
-file = Path(__file__).resolve()
-root = file.parents[1]
-sys.path.append(str(root))
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from typing import Dict
 

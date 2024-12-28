@@ -1,10 +1,6 @@
-
 import sys
-from pathlib import Path
-file = Path(__file__).resolve()
-parent, root = file.parent, file.parents[1]
-sys.path.append(str(root))
-
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
 import json
