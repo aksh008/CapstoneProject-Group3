@@ -62,7 +62,7 @@ def retrain_mobilenetv2(task, num_classes):
         model: Compiled Keras model.
     """
     try:
-        input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
+        input_model = InputModel(model_id=config.app_config.clearmlconfig.model_id)
         task.connect(input_model)
 
         model_path = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
