@@ -25,7 +25,8 @@ class KaggleHubConfig(BaseModel):
 class ClearMLConfig(BaseModel):
     project: str
     dataset: str
-    output_dir: str   
+    output_dir: str
+    dataset_version: str
     
 
 class AppConfig(BaseModel):

@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import os
 
 import tensorflow as tf
 from tensorflow.keras.applications import MobileNetV2
@@ -9,6 +10,8 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import get
 from clearml import Task, OutputModel, InputModel
 from tensorflow.keras.models import load_model
+import h5py
+from clearml import Model
 # # # from train_pipeline import task
 
 # # from harit_model.config.core import config
@@ -47,7 +50,23 @@ def train_mobilenetv2(num_classes):
     #     ])
     input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
     task.connect(input_model)
-    model= load_model("trained_models/plant_disease_model_v2.keras")
+    
+    # model_id = "b88b00c23dc54928a2c51b02de26fd38"
+
+    # try:
+    #     model_path = Model.get(model_id=model_id).get_local_copy(force_download=True)
+    #     print(f"Model downloaded to: {model_path}")
+    # except Exception as e:
+    #     print("Failed to download model:", e)
+    file_path = (r"MyHarit_model_checkpoint.keras")
+    # file_path = r"C:\Akshay\AIMLOps24\Capstone Project\akshay_25dec\CapstoneProject-Group3\harit_model\MyHarit_model_checkpoint.keras"
+# print("File exists:", os.path.exists(file_path    ))
+
+    model = load_model(file_path)
+
+    # model= load_model(
+    #     r"C:\Akshay\AIMLOps24\Capstone Project\akshay_25dec\CapstoneProject-Group3\harit_model\trained_models\plant_disease_model_v2.h5"
+    #     )
     print("finally Model loaded successfully!")
     # Save as TensorFlow SavedModel
     # saved_model_dir = "C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.tf"
@@ -85,32 +104,33 @@ def train_mobilenetv2(num_classes):
 
 # if __name__ == "__main__":
 
-#     base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
-#     base_model.trainable = False  # Freeze base layers
+#     # base_model = MobileNetV2(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
+#     # base_model.trainable = False  # Freeze base layers
 
-# model = Sequential([
-#     base_model,
-#     GlobalAveragePooling2D(),
-#     Dense(256, activation='relu'),
-#     Dense(38, activation='softmax')  # Adjust the number of classes
-# ])
-# import os
-# import h5py
-# print(os.path.exists("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5"))
+# # model = Sequential([
+# #     base_model,
+# #     GlobalAveragePooling2D(),
+# #     Dense(256, activation='relu'),
+# #     Dense(38, activation='softmax')  # Adjust the number of classes
+# # ])
+#     import os
+#     import h5py
+#     print(os.path.exists("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5"))
 
 # # Load weights
-# try:
-#     with h5py.File("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5", 'r') as file:
-#         print("File is a valid HDF5 file.")
-#     # model.load_weights("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
-#     # print("Weights loaded successfully!")
-#     model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
-#     # Save as TensorFlow SavedModel
-#     saved_model_dir = "C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.keras"
-#     model.save(saved_model_dir)
-#     # model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.tf")
-#     reloaded_model = tf.keras.models.load_model(saved_model_dir)
-#     # model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
-#     print("finally Model loaded successfully!")
-# # except Exception as e:
-# #     print(f"Could not load weights: {e}")
+#     try:
+#         with h5py.File("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5", 'r') as file:
+#             print("File is a valid HDF5 file.")
+#         # model.load_weights("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
+#         # print("Weights loaded successfully!")
+#         model = load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
+#         # Save as TensorFlow SavedModel
+#         saved_model_dir = "C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.keras"
+#         model.save(saved_model_dir)
+#         # model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.tf")
+#         reloaded_model = tf.keras.models.load_model(saved_model_dir)
+#         # model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.h5")
+#         print("finally Model loaded successfully!")
+#     except Exception as e:
+#         print(f"Could not load weights: {e}")
+

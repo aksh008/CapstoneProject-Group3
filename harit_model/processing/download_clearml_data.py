@@ -3,11 +3,13 @@ from harit_model import config
 import os
 from clearml import Dataset
 
-def download_fromclearml(project, dataset, output_dir):
+def download_fromclearml(project, dataset, output_dir, dataset_version):
     dataset = Dataset.get(
         dataset_id=None,  
         dataset_project=project,
         dataset_name=dataset,
+        alias=dataset+"_"+ dataset_version,
+        # alias="harit_dataset_v1.0.0",
         # dataset_tags="my tag",
         # dataset_version="1.2",
         only_completed=True, 
@@ -29,6 +31,7 @@ def download_dataset():
     project = clearml_config.project
     dataset = clearml_config.dataset
     output_dir = Path(clearml_config.output_dir)
+    dataset_version = clearml_config.dataset_version
     
     # testing only
     #project = "Harit_CapStone_Project"
@@ -40,7 +43,7 @@ def download_dataset():
 
     # Download the dataset
     print(f"Downloading dataset from clearml: {dataset} from project:{project}")
-    download_fromclearml(project, dataset, output_dir)
+    download_fromclearml(project, dataset, output_dir, dataset_version)
     #return path
 
 if __name__ == "__main__":
