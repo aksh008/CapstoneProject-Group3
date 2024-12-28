@@ -56,7 +56,7 @@ def load_dataset():
     # Extract the dataset name from the full dataset path
     #dataset_name = dataset.split('/')[-1]
 
-    print ("inside datamanager load_dataset method    ")
+    print ("Getting the data from ClearMl Dataset")
     # Check if the dataset already exists in the DATASET_DIR
     clearml_config = config.app_config.clearmlconfig
     dataset = clearml_config.dataset
