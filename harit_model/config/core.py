@@ -1,3 +1,4 @@
+
 import sys
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from typing import Dict
 from pydantic import BaseModel
 from strictyaml import YAML, load
 import harit_model
+
 # Project Directories
 PACKAGE_ROOT = Path(harit_model.__file__).resolve().parent
 CONFIG_FILE_PATH = PACKAGE_ROOT / "config.yml"
@@ -18,13 +20,18 @@ DATASET_DIR = PACKAGE_ROOT / "dataset"
 TRAINED_MODEL_DIR = PACKAGE_ROOT / "trained_models"
 INDICES_DIR = PACKAGE_ROOT / "indices"
 
-class KaggleHubConfig(BaseModel):
+
+   
+class ClearMLConfig(BaseModel):
+    project: str
     dataset: str
     output_dir: str
+    dataset_version: str
+    
 
 class AppConfig(BaseModel):
     package_name: str
-    kagglehub: KaggleHubConfig
+    clearmlconfig: ClearMLConfig
     data_dir: str
     test_data_dir: str
     pipeline_name: str
@@ -61,7 +68,7 @@ def create_and_validate_config(parsed_config: YAML = None) -> Config:
     # Separate app_config and model_config
     app_config_data = {
         "package_name": parsed_config.data["package_name"],
-        "kagglehub": parsed_config.data["kagglehub"],
+        "clearmlconfig": parsed_config.data["clearml"],
         "data_dir": parsed_config.data["data_dir"],
         "test_data_dir": parsed_config.data["test_data_dir"],
         "pipeline_name": parsed_config.data["pipeline_name"],
