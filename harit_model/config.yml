@@ -8,7 +8,7 @@ clearml:
   output_dir: "./dataset"
   dataset_version: v1.0.0
   checkpoint_name: "Harit_model_checkpoint.keras"
-  model_id: b88b00c23dc54928a2c51b02de26fd38
+  model_id: 76ef9d03c0444def9806571d23f656d5
 
 # Data Files
 data_dir: ./dataset/New Plant Diseases Dataset(Augmented)/New Plant Diseases Dataset(Augmented)/
