@@ -18,15 +18,18 @@ PACKAGE_ROOT = Path(harit_model.__file__).resolve().parent
 CONFIG_FILE_PATH = PACKAGE_ROOT / "config.yml"
 DATASET_DIR = PACKAGE_ROOT / "dataset"
 TRAINED_MODEL_DIR = PACKAGE_ROOT / "trained_models"
+TRAINED_MODEL_CHECKPOINT = PACKAGE_ROOT / "model_checkpoints"
 INDICES_DIR = PACKAGE_ROOT / "indices"
 
 
    
 class ClearMLConfig(BaseModel):
-    project: str
+    project_name: str
     dataset: str
     output_dir: str
     dataset_version: str
+    checkpoint_name: str
+    
     
 
 class AppConfig(BaseModel):

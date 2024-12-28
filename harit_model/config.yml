@@ -3,10 +3,11 @@ package_name: plant_disease_model
  
 # Data Files
 clearml:
-  project: "Harit_CapStone_Project"
+  project_name: "Harit_CapStone_Project"
   dataset: Harit_DataSet
   output_dir: "./dataset"
   dataset_version: v1.0.0
+  checkpoint_name: "Harit_model_checkpoint.keras"
 
 # Data Files
 data_dir: ./dataset/New Plant Diseases Dataset(Augmented)/New Plant Diseases Dataset(Augmented)/
@@ -23,5 +24,5 @@ test_size: 0.20
 random_state: 42
  
 # Alogrithm parameters
-epochs: 1
+epochs: 2
 batch_size: 64
