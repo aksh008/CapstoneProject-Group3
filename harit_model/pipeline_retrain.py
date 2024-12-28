@@ -47,7 +47,7 @@ def train_mobilenetv2(num_classes):
     #     ])
     input_model = InputModel(model_id="b88b00c23dc54928a2c51b02de26fd38")
     task.connect(input_model)
-    model= load_model("C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.keras")
+    model= load_model("trained_models/plant_disease_model_v2.keras")
     print("finally Model loaded successfully!")
     # Save as TensorFlow SavedModel
     # saved_model_dir = "C:/Akshay/AIMLOps24/Capstone Project/akshay_25dec/CapstoneProject-Group3/harit_model/trained_models/plant_disease_model_v2.tf"

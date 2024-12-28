@@ -47,7 +47,7 @@ def run_training() -> None:
 
     logdir = "logs/digits/" + datetime.now().strftime("%Y%m%d-%H%M%S")
     callbacks_list = [tf.keras.callbacks.TensorBoard(log_dir=logdir),
-                      tf.keras.callbacks.ModelCheckpoint("MyHarit_model_checkpoint.keras",save_best_only=True)]    
+                      tf.keras.callbacks.ModelCheckpoint("trained_models/Harit_model_checkpoint.keras",save_best_only=True)]    
     # Train the model
     model.fit(
         train_data,
