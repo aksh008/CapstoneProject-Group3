@@ -8,6 +8,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import get
 from tensorflow.keras.models import load_model
+from tensorflow.keras.optimizers import Adam, get
 from clearml import InputModel
 
 from harit_model.config.core import TRAINED_MODEL_CHECKPOINT, config
@@ -70,8 +71,8 @@ def retrain_mobilenetv2(task, num_classes):
 
         task.connect(model)
 
-        optimizer_class = get(parameters['optimizer'])
-        optimizer = optimizer_class(learning_rate=parameters['learning_rate'])
+        optimizer = get(parameters['optimizer'])
+        optimizer.learning_rate = parameters['learning_rate']
 
         model.compile(
             optimizer=optimizer,
