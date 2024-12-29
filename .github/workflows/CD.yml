@@ -1,28 +1,28 @@
-# name: CD Pipeline
+name: CD Pipeline
 
-# # Only trigger, when the build workflow succeeded
-# on:
-#   workflow_run:
-#     workflows: ["CI Pipeline"]
-#     types:
-#       - completed
+# Only trigger, when the build workflow succeeded
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
 
-# jobs:
-#   deploy:
-#     runs-on: self-hosted
+jobs:
+  deploy:
+    runs-on: self-hosted
 
-#     steps:
-#       - name: Pull Docker Image
-#         env: 
-#           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-#         run: sudo docker pull $DOCKER_USER/harit-fastapi:latest
+    steps:
+      - name: Pull Docker Image
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+        run: sudo docker pull $DOCKER_USER/harit-fastapi:latest
     
-#       - name: Delete Old Docker Container
-#         run: sudo docker rm -f harit-fastapi-container || true
+      - name: Delete Old Docker Container
+        run: sudo docker rm -f harit-fastapi-container || true
     
-#       - name: Run Docker Container
-#         env: 
-#           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-#           LITERAL_API_KEY: ${{ secrets.LITERAL_API_KEY }}          
-#           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-#         run: sudo docker run -e LITERAL_API_KEY=$LITERAL_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -it -d -p 8000:8000 --name harit-fastapi-container $DOCKER_USER/harit-fastapi:latest
+      - name: Run Docker Container
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+          LITERAL_API_KEY: ${{ secrets.LITERAL_API_KEY }}          
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: sudo docker run -e LITERAL_API_KEY=$LITERAL_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -it -d -p 8000:8000 --name harit-fastapi-container $DOCKER_USER/harit-fastapi:latest
