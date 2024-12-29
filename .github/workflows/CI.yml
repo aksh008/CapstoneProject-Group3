@@ -7,7 +7,30 @@ on:
   workflow_dispatch:
 
 jobs:
+  check_changes:
+    name: Check Changes in DATASET_VERSION
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.changed }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Check for Changes in DATASET_VERSION
+        id: check
+        run: |
+          if git diff --name-only HEAD^ HEAD | grep -q "DATASET_VERSION"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in DATASET_VERSION"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes in DATASET_VERSION"
+          fi
   train:
+    needs: check_changes
+    if: needs.check_changes.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
