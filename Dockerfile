@@ -2,11 +2,11 @@
 FROM python:3.10
 
 # copy application files
-ADD ./harit_model_api /harit_model_api/
+COPY ./harit_model_api /harit_model_api/
 
 # copy chainlit config and public folders
-COPY .chainlit /harit_model_api/.chainlit
-COPY public /harit_model_api/public
+# COPY .chainlit /harit_model_api/.chainlit
+# COPY public /harit_model_api/public
 
 # specify working directory
 WORKDIR /harit_model_api
@@ -24,9 +24,9 @@ RUN pip install -r requirements.txt
 EXPOSE 8000
 
 # start fastapi application
-CMD ["chainlit", "run" ,"app/main.py", "--host", "0.0.0.0"]
+# CMD ["chainlit", "run" ,"app/main.py", "--host", "0.0.0.0"]
 # CMD ["python", "app/main.py"]
-# CMD ["uvicorn", "harit_model_api.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "harit_model_api.app2.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 
 
