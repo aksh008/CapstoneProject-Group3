@@ -5,9 +5,6 @@ file = Path(__file__).resolve()
 root = file.parents[1]
 sys.path.append(str(root))
 
-# Add the project root to sys.path
-sys.path.append(project_root)
-
 from harit_model import config
 from clearml import Dataset
 
