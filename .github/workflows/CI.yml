@@ -18,6 +18,7 @@ jobs:
 
       - name: Check for Changes in DATASET_VERSION
         run: |
+          echo "In run command"
           if git diff --exit-code --quiet HEAD~1 HEAD -- DATASET_VERSION; then
             echo "No change in DATASET_VERSION file. Skipping training."
             exit 0  # Skip the training step
