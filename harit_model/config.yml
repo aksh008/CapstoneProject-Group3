@@ -4,7 +4,7 @@ package_name: plant_disease_model
 # Data Files
 clearml:
   project_name: "Harit_CapStone_Project"
-  dataset: Harit_DataSet
+  dataset: Harit_Bot_DataSet
   output_dir: "./dataset"
   checkpoint_name: "Harit_model_checkpoint.keras"
   # Change model if after each training task from ClearML

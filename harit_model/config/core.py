@@ -23,11 +23,8 @@ class ClearMLConfig(BaseModel):
     project_name: str
     dataset: str
     output_dir: str
-    checkpoint_name: str
-    model_id: str
+    checkpoint_name: str    
     
-    
-
 class AppConfig(BaseModel):
     package_name: str
     clearmlconfig: ClearMLConfig

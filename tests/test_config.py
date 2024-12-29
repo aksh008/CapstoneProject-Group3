@@ -18,7 +18,6 @@ SAMPLE_YAML = """
         dataset: sample_dataset
         output_dir: /sample/output
         checkpoint_name: sample_checkpoint
-        model_id: sample_model_id
     data_dir: /sample/data
     test_data_dir: /sample/test_data
     pipeline_name: sample_pipeline
@@ -69,7 +68,6 @@ def test_config_module():
     assert config.app_config.clearmlconfig.dataset == "sample_dataset"
     assert config.app_config.clearmlconfig.output_dir == "/sample/output"
     assert config.app_config.clearmlconfig.checkpoint_name == "sample_checkpoint"
-    assert config.app_config.clearmlconfig.model_id == "sample_model_id"
 
     # Validate ModelConfig
     assert isinstance(config.model_config, ModelConfig)

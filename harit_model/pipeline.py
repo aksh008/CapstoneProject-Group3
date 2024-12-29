@@ -9,7 +9,7 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import get
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam, get
-from clearml import InputModel
+from clearml import InputModel, Model
 
 from harit_model.config.core import TRAINED_MODEL_CHECKPOINT, config
 
@@ -51,6 +51,15 @@ def train_mobilenetv2(num_classes):
 
     return model
 
+# Gets the model id of .keras model
+def get_model_id():
+    models = Model.query_models(
+        project_name=config.app_config.clearmlconfig.project_name,
+        tags=["keras"]
+    )
+    model_id = models[0].id
+    return model_id
+
 def retrain_mobilenetv2(task, num_classes):
     """
     Load, configure, and compile the MobileNetV2 model for retraining.
@@ -62,7 +71,7 @@ def retrain_mobilenetv2(task, num_classes):
         model: Compiled Keras model.
     """
     try:
-        input_model = InputModel(model_id=config.app_config.clearmlconfig.model_id)
+        input_model = InputModel(model_id=get_model_id())
         task.connect(input_model)
 
         model_path = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
