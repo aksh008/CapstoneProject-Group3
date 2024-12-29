@@ -51,8 +51,14 @@ def run_training() -> None:
     
     print(f'Test Accuracy: {test_acc:.4f}, Test Loss: {test_loss:.4f}')
 
-if __name__ == "__main__":
+def run_train_pipeline() :
     project_name = config.app_config.clearmlconfig.project_name
     task = Task.init(project_name=project_name, task_name=f"train_task_{project_name}")
     task.connect(parameters)
     run_training()
+    
+# if __name__ == "__main__":
+#     project_name = config.app_config.clearmlconfig.project_name
+#     task = Task.init(project_name=project_name, task_name=f"train_task_{project_name}")
+#     task.connect(parameters)
+#     run_training()

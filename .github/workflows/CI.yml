@@ -54,7 +54,7 @@ jobs:
           CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
         run: |
           set -e
-          python harit_model/retrain_pipeline.py
+          python harit_model/train.py
           if [ $? -ne 0 ]; then
             echo "Training failed"
             exit 1
