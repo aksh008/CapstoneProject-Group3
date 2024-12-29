@@ -47,11 +47,11 @@ jobs:
       - name: Re-Train and Save Pipeline
         if: needs.check_changes.outputs.should_run == 'true'   
         env:
-          CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
-          CLEARML_WEB_HOST: ${{ secrets.CLEARML_WEB_HOST }}
-          CLEARML_FILES_HOST: ${{ secrets.CLEARML_FILES_HOST }}
-          CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY }}
-          CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
+          CLEARML_API_HOST: ${{ secrets.HCLEARML_API_HOST }}
+          CLEARML_WEB_HOST: ${{ secrets.HCLEARML_WEB_HOST }}
+          CLEARML_FILES_HOST: ${{ secrets.HCLEARML_FILES_HOST }}
+          CLEARML_API_ACCESS_KEY: ${{ secrets.HCLEARML_API_ACCESS_KEY }}
+          CLEARML_API_SECRET_KEY: ${{ secrets.HCLEARML_API_SECRET_KEY }}
         run: |
           set -e
           python harit_model/train.py
