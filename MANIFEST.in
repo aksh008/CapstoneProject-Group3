@@ -2,8 +2,7 @@ include *.txt
 include *.md
 include *.pkl
 recursive-include ./harit_model *
-recursive-exclude ./harit_model/dataset/New* *
-recursive-exclude ./harit_model/dataset/test *
+recursive-exclude ./harit_model/dataset *
 
 include harit_model/trained_models/*.h5
 include harit_model/VERSION
