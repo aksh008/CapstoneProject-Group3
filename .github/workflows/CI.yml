@@ -28,6 +28,9 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "No changes in DATASET_VERSION"
           fi
+      - name: Print should_run value
+        run: echo "should_run value is ${{ steps.check.outputs.changed }}" 
+
   train:
     needs: check_changes
     runs-on: ubuntu-latest
@@ -39,10 +42,10 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
-        if: steps.check.outputs.changed == 'true'
+        if: needs.check_changes.outputs.should_run == 'true'       
         run: pip install -r requirements/requirements.txt
       - name: Re-Train and Save Pipeline
-        if: steps.check.outputs.changed == 'true'
+        if: needs.check_changes.outputs.should_run == 'true'   
         env:
           CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
           CLEARML_WEB_HOST: ${{ secrets.CLEARML_WEB_HOST }}
@@ -57,15 +60,15 @@ jobs:
             exit 1
           fi
       - uses: actions/upload-artifact@v3
-        if: steps.check.outputs.changed == 'true' && success()
+        if: needs.check_changes.outputs.should_run == 'true' && success()
         with:
           name: harit-trained-pipeline
           path: harit_model/trained_models
       - name: Skip Training Notification
-        if: steps.check.outputs.changed == 'false'
+        if: needs.check_changes.outputs.should_run == 'false'   
         run: echo "No changes in DATASET_VERSION. Skipping training steps."
   test:
-    needs: train
+    needs: [check_changes, train]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -74,7 +77,7 @@ jobs:
         with:
           python-version: '3.11'
       - uses: actions/download-artifact@v3
-        if: steps.check.outputs.changed == 'true'
+        if: needs.check_changes.outputs.should_run == 'true'
         with:
           name: harit-trained-pipeline
           path: harit_model/trained_models
@@ -84,7 +87,7 @@ jobs:
         run: pytest
 
   build:
-    needs: test
+    needs: [check_changes, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -93,7 +96,7 @@ jobs:
         with:
           python-version: '3.11'
       - uses: actions/download-artifact@v3
-        if: steps.check.outputs.changed == 'true'
+        if: needs.check_changes.outputs.should_run == 'true'
         with:
           name: harit-trained-pipeline
           path: harit_model/trained_models
