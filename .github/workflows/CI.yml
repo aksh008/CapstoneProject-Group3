@@ -39,15 +39,16 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
+        if: steps.check.outputs.changed == 'true'
         run: pip install -r requirements/requirements.txt
       - name: Re-Train and Save Pipeline
         if: steps.check.outputs.changed == 'true'
         env:
-          CLEARML_API_HOST: 'https://api.clear.ml/'
-          CLEARML_WEB_HOST: 'https://app.clear.ml'
-          CLEARML_FILES_HOST: 'https://files.clear.ml'
-          CLEARML_API_ACCESS_KEY: '58514LGVU4ZKJ9X4CTYIYQS0MWNQ8S'
-          CLEARML_API_SECRET_KEY: 'hVfY6m4eIawlNajimANnLZ1cPPmQ_XKkFCwc_BIYxgiDxSZBUmZwo8BYNFEBbRPMvv8'
+          CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
+          CLEARML_WEB_HOST: ${{ secrets.CLEARML_WEB_HOST }}
+          CLEARML_FILES_HOST: ${{ secrets.CLEARML_FILES_HOST }}
+          CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY }}
+          CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
         run: |
           set -e
           python harit_model/retrain_pipeline.py
@@ -58,7 +59,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: steps.check.outputs.changed == 'true' && success()
         with:
-          name: my-trained-pipeline
+          name: harit-trained-pipeline
           path: harit_model/trained_models
       - name: Skip Training Notification
         if: steps.check.outputs.changed == 'false'
@@ -73,8 +74,9 @@ jobs:
         with:
           python-version: '3.11'
       - uses: actions/download-artifact@v3
+        if: steps.check.outputs.changed == 'true'
         with:
-          name: my-trained-pipeline
+          name: harit-trained-pipeline
           path: harit_model/trained_models
       - name: Install dependencies
         run: pip install -r requirements/test_requirements.txt
@@ -91,8 +93,9 @@ jobs:
         with:
           python-version: '3.11'
       - uses: actions/download-artifact@v3
+        if: steps.check.outputs.changed == 'true'
         with:
-          name: my-trained-pipeline
+          name: harit-trained-pipeline
           path: harit_model/trained_models
       - name: Install Build Tool
         run: pip install --upgrade build
