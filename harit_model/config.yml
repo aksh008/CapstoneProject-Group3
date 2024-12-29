@@ -7,9 +7,6 @@ clearml:
   dataset: Harit_Bot_DataSet
   output_dir: "./dataset"
   checkpoint_name: "Harit_model_checkpoint.keras"
-  # Change model if after each training task from ClearML
-  # TODO pull id from Clearml
-  model_id: 37951fd67f63432b8f07937925417cd2
 
 # Data Files
 data_dir: ./dataset/New Plant Diseases Dataset(Augmented)/New Plant Diseases Dataset(Augmented)/
