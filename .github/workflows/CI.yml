@@ -9,7 +9,7 @@ on:
 jobs:
   check_changes:
     name: Check Changes in DATASET_VERSION
-    runs-on: ubuntu-latest
+    runs-on: CI-runner
     outputs:
       should_run: ${{ steps.check.outputs.changed }}
     steps:
@@ -33,7 +33,7 @@ jobs:
 
   train:
     needs: check_changes
-    runs-on: ubuntu-latest
+    runs-on: CI-runner
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -69,7 +69,7 @@ jobs:
         run: echo "No changes in DATASET_VERSION. Skipping training steps."
   test:
     needs: [check_changes, train]
-    runs-on: ubuntu-latest
+    runs-on: CI-runner
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.11
@@ -88,7 +88,7 @@ jobs:
 
   build:
     needs: [check_changes, test]
-    runs-on: ubuntu-latest
+    runs-on: CI-runner
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.11
@@ -114,7 +114,7 @@ jobs:
 
   push-image:
     needs: [test, build]
-    runs-on: ubuntu-latest
+    runs-on: CI-runner
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
