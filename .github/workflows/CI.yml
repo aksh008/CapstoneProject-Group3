@@ -6,16 +6,16 @@ on:
   workflow_dispatch:
 
 jobs:
-check_changes:
-  script:
-    - |
-      if git diff --exit-code --quiet HEAD~1 HEAD -- DATASET_VERSION; then
-        echo "No change in DATASET_VERSION file. Skipping training."
-        exit 0  # Skip the training step
-      else
-        echo "Change detected in DATASET_VERSION file. Proceeding with training."
-      fi
-  stage: check_changes
+  check_changes:
+    script:
+      - |
+        if git diff --exit-code --quiet HEAD~1 HEAD -- DATASET_VERSION; then
+          echo "No change in DATASET_VERSION file. Skipping training."
+          exit 0  # Skip the training step
+        else
+          echo "Change detected in DATASET_VERSION file. Proceeding with training."
+        fi
+    stage: check_changes
 
   train:
     needs: check-changes
