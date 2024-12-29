@@ -6,9 +6,10 @@ clearml:
   project_name: "Harit_CapStone_Project"
   dataset: Harit_DataSet
   output_dir: "./dataset"
-  dataset_version: v1.0.0
   checkpoint_name: "Harit_model_checkpoint.keras"
-  model_id: 76ef9d03c0444def9806571d23f656d5
+  # Change model if after each training task from ClearML
+  # TODO pull id from Clearml
+  model_id: 37951fd67f63432b8f07937925417cd2
 
 # Data Files
 data_dir: ./dataset/New Plant Diseases Dataset(Augmented)/New Plant Diseases Dataset(Augmented)/

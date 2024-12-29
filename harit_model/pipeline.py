@@ -66,6 +66,8 @@ def retrain_mobilenetv2(task, num_classes):
         task.connect(input_model)
 
         model_path = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
+        print("path of model picked for retraining ", model_path)
+        
         model = load_model(model_path)
         print("Model loaded successfully!")
 

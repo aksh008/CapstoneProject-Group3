@@ -23,7 +23,6 @@ class ClearMLConfig(BaseModel):
     project_name: str
     dataset: str
     output_dir: str
-    dataset_version: str
     checkpoint_name: str
     model_id: str
     

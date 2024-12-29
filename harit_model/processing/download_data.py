@@ -1,16 +1,20 @@
 from pathlib import Path
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Get the root directory of the project
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+
+# Add the project root to sys.path
+sys.path.append(project_root)
 
 from harit_model import config
 from clearml import Dataset
 
-def download_from_clearml(project_name, dataset, output_dir, dataset_version):
+def download_from_clearml(project_name, dataset, output_dir):
     dataset = Dataset.get(
         dataset_project=project_name,
         dataset_name=dataset,
-        alias=f"{dataset}_{dataset_version}",
+        alias=f"{dataset}_latest",
         only_completed=True, 
         only_published=False,
     )
@@ -28,12 +32,11 @@ def download_dataset():
     project_name = clearml_config.project_name
     dataset = clearml_config.dataset
     output_dir = Path(clearml_config.output_dir)
-    dataset_version = clearml_config.dataset_version
     
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Downloading dataset from ClearML: {dataset} from project: {project_name}")
-    return download_from_clearml(project_name, dataset, output_dir, dataset_version)
+    return download_from_clearml(project_name, dataset, output_dir)
 
 if __name__ == "__main__":
     download_dataset()

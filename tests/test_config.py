@@ -17,7 +17,6 @@ SAMPLE_YAML = """
         project_name: sample_project
         dataset: sample_dataset
         output_dir: /sample/output
-        dataset_version: v1.0
         checkpoint_name: sample_checkpoint
         model_id: sample_model_id
     data_dir: /sample/data
@@ -69,7 +68,6 @@ def test_config_module():
     assert config.app_config.clearmlconfig.project_name == "sample_project"
     assert config.app_config.clearmlconfig.dataset == "sample_dataset"
     assert config.app_config.clearmlconfig.output_dir == "/sample/output"
-    assert config.app_config.clearmlconfig.dataset_version == "v1.0"
     assert config.app_config.clearmlconfig.checkpoint_name == "sample_checkpoint"
     assert config.app_config.clearmlconfig.model_id == "sample_model_id"
 
