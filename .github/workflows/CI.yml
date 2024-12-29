@@ -30,7 +30,6 @@ jobs:
           fi
   train:
     needs: check_changes
-    if: needs.check_changes.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -42,18 +41,28 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements/requirements.txt
       - name: Re-Train and Save Pipeline
+        if: steps.check.outputs.changed == 'true'
         env:
           CLEARML_API_HOST: 'https://api.clear.ml/'
           CLEARML_WEB_HOST: 'https://app.clear.ml'
           CLEARML_FILES_HOST: 'https://files.clear.ml'
           CLEARML_API_ACCESS_KEY: '58514LGVU4ZKJ9X4CTYIYQS0MWNQ8S'
           CLEARML_API_SECRET_KEY: 'hVfY6m4eIawlNajimANnLZ1cPPmQ_XKkFCwc_BIYxgiDxSZBUmZwo8BYNFEBbRPMvv8'
-        run: python harit_model/retrain_pipeline.py
+        run: |
+          set -e
+          python harit_model/retrain_pipeline.py
+          if [ $? -ne 0 ]; then
+            echo "Training failed"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v3
+        if: steps.check.outputs.changed == 'true' && success()
         with:
           name: my-trained-pipeline
           path: harit_model/trained_models
-
+      - name: Skip Training Notification
+        if: steps.check.outputs.changed == 'false'
+        run: echo "No changes in DATASET_VERSION. Skipping training steps."
   test:
     needs: train
     runs-on: ubuntu-latest
@@ -89,6 +98,9 @@ jobs:
         run: pip install --upgrade build
       - name: Build Package
         run: python -m build
+      - name: Copy .whl file to harit_model_api
+        run: |
+          cp -f dist/*.whl harit_model_api/
       - uses: actions/upload-artifact@v3
         with:
           name: my-build-package
