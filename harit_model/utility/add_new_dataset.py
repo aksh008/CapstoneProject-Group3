@@ -1,10 +1,9 @@
+from pathlib import Path
 import sys
 import os
-# Get the root directory of the project
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-
-# Add the project root to sys.path
-sys.path.append(project_root)
+file = Path(__file__).resolve()
+root = file.parents[1]
+sys.path.append(str(root))
 
 from clearml import Dataset
 from harit_model.config.core import config, DATASET_DIR
