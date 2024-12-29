@@ -1,18 +1,18 @@
 # pull python base image
-FROM python:3.10
+FROM python:3.11
 
 # copy application files
 ADD ./harit_model_api /harit_model_api/
 
 # copy chainlit config and public folders
-COPY .chainlit /harit_model_api/.chainlit
-COPY public /harit_model_api/public
+# COPY .chainlit /harit_model_api/.chainlit
+# COPY public /harit_model_api/public
 
 # specify working directory
 WORKDIR /harit_model_api
 
 # copy the Trained Model H5 file to App folder
-COPY ./harit_model/trained_models/*.h5 /harit_model_api/app/
+# COPY ./harit_model/trained_models/*.h5 /harit_model_api/app/
 
 # update pip
 RUN pip install --upgrade pip
