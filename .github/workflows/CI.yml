@@ -55,6 +55,7 @@ jobs:
           path: harit_model/trained_models
 
   test:
+    needs: train
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
