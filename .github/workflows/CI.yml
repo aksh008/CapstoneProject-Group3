@@ -3,13 +3,31 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main
+      - CICD_test
     paths:
       - DATASET_VERSION
   workflow_dispatch:
 
 jobs:
+  check_changes:
+    name: Check Changes in DATASET_VERSION
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Check for Changes in DATASET_VERSION
+        run: |
+          echo "In run command"
+          if git diff --exit-code --quiet HEAD~1 HEAD -- DATASET_VERSION; then
+            echo "No change in DATASET_VERSION file. Skipping training."
+            exit 0  # Skip the training step
+          else
+            echo "Change detected in DATASET_VERSION file. Proceeding with training."
+          fi
+
   train:
+    needs: check_changes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
