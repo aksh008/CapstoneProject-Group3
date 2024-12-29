@@ -42,6 +42,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements/requirements.txt
       - name: Re-Train and Save Pipeline
+        env:
+          CLEARML_API_HOST: 'https://api.clear.ml/'
+          CLEARML_WEB_HOST: 'https://app.clear.ml'
+          CLEARML_FILES_HOST: 'https://files.clear.ml'
+          CLEARML_API_ACCESS_KEY: '58514LGVU4ZKJ9X4CTYIYQS0MWNQ8S'
+          CLEARML_API_SECRET_KEY: 'hVfY6m4eIawlNajimANnLZ1cPPmQ_XKkFCwc_BIYxgiDxSZBUmZwo8BYNFEBbRPMvv8'
         run: python harit_model/retrain_pipeline.py
       - uses: actions/upload-artifact@v3
         with:
@@ -49,7 +55,6 @@ jobs:
           path: harit_model/trained_models
 
   test:
-    needs: train
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -67,7 +72,7 @@ jobs:
         run: pytest
 
   build:
-    needs: train
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
