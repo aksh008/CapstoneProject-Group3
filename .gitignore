@@ -184,7 +184,6 @@ harit_model/dataset/New Plant Diseases Dataset(Augmented)/
 harit_model/dataset/test/test/
 harit_model_api/app/.DS_Store
 harit_model/dataset/.DS_Store
-harit_model/model_checkpoints/
 harit_model/trained_models/
 harit_model/logs/
 harit_model_api/.chainlit/translations/
