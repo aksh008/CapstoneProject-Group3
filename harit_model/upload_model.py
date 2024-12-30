@@ -33,7 +33,7 @@ def upload_new_checkpoint() :
     origin = repo.remote(name='origin')
 
     # For SSH, use:
-    origin.push(refspec='main')
+    origin.push()
 
     print(f'File {checkpoint_file} pushed to GitHub successfully.')
     print(f'File {model_h5_file} pushed to GitHub successfully.')
