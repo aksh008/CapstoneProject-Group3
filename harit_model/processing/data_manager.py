@@ -25,9 +25,10 @@ def save_pipeline(pipeline_to_persist) -> None:
 def remove_old_pipelines(*, files_to_keep: t.List[str]) -> None:
     """Remove old model pipelines."""
     do_not_delete = files_to_keep + ["__init__.py"]
-    for model_file in TRAINED_MODEL_DIR.iterdir():
-        if model_file.name not in do_not_delete:
-            model_file.unlink()
+    if(os.path.exists(TRAINED_MODEL_DIR)):
+        for model_file in TRAINED_MODEL_DIR.iterdir():
+            if model_file.name not in do_not_delete:
+                model_file.unlink()
 
 def copy_folder(source_folder, destination_folder):
     """Copy all files and subdirectories from source to destination."""
