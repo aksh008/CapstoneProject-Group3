@@ -13,7 +13,7 @@ from harit_model.pipeline import retrain_mobilenetv2
 from harit_model.processing.features import train_test_valid
 from pipeline import parameters
 
-def run_retraining() -> None:
+def run_retraining(task) -> None:
     """Train the model."""
     
     # Download dataset
@@ -60,7 +60,7 @@ def run_retrain_pipeline() :
     project_name = config.app_config.clearmlconfig.project_name
     task = Task.init(project_name=project_name, task_name=f"retrain_task_{project_name}")
     task.connect(parameters)
-    run_retraining()
+    run_retraining(task)
     
 # if __name__ == "__main__":
 #     project_name = config.app_config.clearmlconfig.project_name

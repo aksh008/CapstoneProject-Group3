@@ -13,7 +13,7 @@ from pipeline import parameters
 from datetime import datetime
 import tensorflow as tf
 
-def run_training() -> None:
+def run_training(task) -> None:
     """Train the model."""
     
     print("Invoking load_dataset from datamanager")
@@ -51,7 +51,7 @@ def run_training() -> None:
     
     print(f'Test Accuracy: {test_acc:.4f}, Test Loss: {test_loss:.4f}')
 
-def run_train_pipeline() :
+def run_train_pipeline(task) :
     project_name = config.app_config.clearmlconfig.project_name
     task = Task.init(project_name=project_name, task_name=f"train_task_{project_name}")
     task.connect(parameters)
