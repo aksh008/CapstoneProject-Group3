@@ -13,7 +13,7 @@ def upload_new_checkpoint() :
     repo_path = PACKAGE_ROOT
     repo_path = repo_path.parents[0]
     checkpoint_file = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
-    model_h5_file = TRAINED_MODEL_DIR / "{config.app_config.pipeline_save_file}{_version}.h5"
+    model_h5_file = TRAINED_MODEL_DIR / f"{config.app_config.pipeline_save_file}{_version}.h5"
     
     print("Repo path: ", repo_path)
 
@@ -33,7 +33,7 @@ def upload_new_checkpoint() :
     origin = repo.remote(name='origin')
 
     # For SSH, use:
-    origin.push(refspec='CICD_test')
+    origin.push(refspec='main')
 
     print(f'File {checkpoint_file} pushed to GitHub successfully.')
     print(f'File {model_h5_file} pushed to GitHub successfully.')
