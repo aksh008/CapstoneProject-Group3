@@ -57,6 +57,7 @@ def run_train_pipeline() :
     task.connect(parameters)
     run_training(task)
     
+    
 # if __name__ == "__main__":
 #     project_name = config.app_config.clearmlconfig.project_name
 #     task = Task.init(project_name=project_name, task_name=f"train_task_{project_name}")
