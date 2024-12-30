@@ -176,7 +176,6 @@ __pycache__/
 
 # Exclude trained model files
 *.pkl
-*.h5
 *.model
 *.venv
 
