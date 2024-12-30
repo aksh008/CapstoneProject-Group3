@@ -54,8 +54,6 @@ jobs:
           CLEARML_API_SECRET_KEY: ${{ secrets.HCLEARML_API_SECRET_KEY }}
           GITHUB_TOKEN: ${{ secrets.GIT_PERSONAL_ACCESS_TOKEN }}
       run: |
-        
-        run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           set -e
