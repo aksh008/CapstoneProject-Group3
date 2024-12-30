@@ -8,7 +8,7 @@ from harit_model.train_pipeline import run_train_pipeline
 
 checkpoint_path = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
 print("check point path: ", checkpoint_path)
-if(os.path.exists(checkpoint_path)) :
+if(0 & os.path.exists(checkpoint_path)) :
     print("Running retraining ")
     run_retrain_pipeline()
 else:
