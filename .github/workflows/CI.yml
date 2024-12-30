@@ -37,10 +37,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Set up Python 3.11.11
+      - name: Set up Python 3.11.0
         uses: actions/setup-python@v3
         with:
-          python-version: '3.11.11'
+          python-version: '3.11.0'
       - name: Install dependencies
         if: needs.check_changes.outputs.should_run == 'true'       
         run: pip install -r requirements/requirements.txt
@@ -72,10 +72,10 @@ jobs:
     runs-on: CI-runner
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.11.11
+      - name: Set up Python 3.11.0
         uses: actions/setup-python@v3
         with:
-          python-version: '3.11.11'
+          python-version: '3.11.0'
       - uses: actions/download-artifact@v3
         if: needs.check_changes.outputs.should_run == 'true'
         with:
@@ -91,10 +91,10 @@ jobs:
     runs-on: CI-runner
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.11.11
+      - name: Set up Python 3.11.0
         uses: actions/setup-python@v3
         with:
-          python-version: '3.11.11'
+          python-version: '3.11.0'
       - uses: actions/download-artifact@v3
         if: needs.check_changes.outputs.should_run == 'true'
         with:
