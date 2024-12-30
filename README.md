@@ -36,5 +36,9 @@ Steps to get access_key and secret_key:
 3. In the API Credentials section, you'll see your Access Key and Secret Key.
 4. Copy these keys and note the server URL as https://api.clear.ml.
 
+TODO
+1. Think about retraining plan
+2. 
+
 Codespace - setting python 3.11 version 
 https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/setting-up-your-python-project-for-codespaces
