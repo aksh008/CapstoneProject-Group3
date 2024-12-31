@@ -23,5 +23,5 @@ test_size: 0.20
 random_state: 42
  
 # Alogrithm parameters
-epochs: 1
+epochs: 2
 batch_size: 64
