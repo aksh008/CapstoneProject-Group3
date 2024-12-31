@@ -12,10 +12,10 @@ if __name__ == "__main__":
     checkpoint_path = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
     print("check point path: ", checkpoint_path)
     if(os.path.exists(checkpoint_path)) :
-        print("Running retraining ")
+        print("Running retraining on pre trained model")
         run_retrain_pipeline()
     else:
-        print("Running training ")
+        print("Running training on base model")
         run_train_pipeline()
         
     #upload_new_checkpoint()

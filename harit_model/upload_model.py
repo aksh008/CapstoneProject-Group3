@@ -76,9 +76,13 @@ def upload_files_to_git() :
         # git add command
         print ("git add command - adding 2 files")
         print ("checkpoint file:: ",checkpoint_file)
-        print ("model h5 file", model_h5_file)
+        print ("model h5 file:: ", model_h5_file)
         subprocess.run(['git', 'add', checkpoint_file], check=True)
         subprocess.run(['git', 'add', model_h5_file], check=True)
+        
+        # git status command
+        print ("git status command")
+        subprocess.run(['git', 'status'], check=True, text=True)
         
         # Commit the file
         print ("git commit comand")

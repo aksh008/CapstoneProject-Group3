@@ -16,9 +16,11 @@ def fix_github_auth():
         result = subprocess.run(['git', 'remote', 'get-url', 'origin'], 
                               capture_output=True, text=True)
         old_url = result.stdout.strip()
+        print("old url::", old_url)
         
         # Extract repository path
         repo_path = old_url.split('github.com/')[-1]
+        print ("repo path::", repo_path)
         
         # Create new URL with credentials
         new_url = f'https://{username}:{token}@github.com/{repo_path}'
