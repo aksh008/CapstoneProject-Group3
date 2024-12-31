@@ -50,6 +50,8 @@ def upload_files_to_git() :
         gitusername = os.getenv("GIT_USERNAME")
         gitaccesstoken = os.getenv("GIT_PERSONAL_ACCESS_TOKEN")
         git_user_email = os.getenv("GIT_USER_EMAIL")
+        print('git email is:', git_user_email)
+        print('git username is:', gitusername)
         
         # Define the repository path and the file to be added
         repo_path = PACKAGE_ROOT

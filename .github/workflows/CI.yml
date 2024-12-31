@@ -54,6 +54,7 @@ jobs:
           CLEARML_API_SECRET_KEY: ${{ secrets.HCLEARML_API_SECRET_KEY }}
           GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
           GIT_PERSONAL_ACCESS_TOKEN: ${{ secrets.GIT_PERSONAL_ACCESS_TOKEN }}
+          GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL}}
         run: |
           python harit_model/train.py
           if [ $? -ne 0 ]; then
