@@ -1,12 +1,18 @@
 import base64
 import os
 from pathlib import Path
+from fastapi import FastAPI, UploadFile, File, HTTPException, APIRouter
+from fastapi.responses import JSONResponse
+from dotenv import load_dotenv
 import chainlit as cl
 from openai import OpenAI
-from dotenv import load_dotenv
 from literalai import LiteralClient
-from fastapi import UploadFile
 from harit_model.predict import make_prediction
+# from api import api_router
+# from harit_model_api.app import __version__, schemas
+# from api import predict
+from chainlit.utils import mount_chainlit
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # Load environment variables
 load_dotenv()
@@ -20,7 +26,19 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 literalai_client = LiteralClient(api_key=os.getenv("LITERAL_API_KEY"))
 literalai_client.instrument_openai()
 
+# FastAPI app initialization
+app = FastAPI()
+api_router = APIRouter()
 
+
+app.include_router(api_router)
+# Add a default route
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
+@app.get("/")
+def root():
+    return {"message": "Welcome to the FastAPI application with Prometheus monitoring! Go to /chainlit for the chatbot UI."}
+
+# Chainlit integration
 @literalai_client.step(type="run")
 def is_valid_leaf(image_content):
     prompt = "Check if the image is a plant or a leaf image. The answer should be either LEAF or NOT_LEAF."
@@ -51,19 +69,17 @@ def is_valid_leaf(image_content):
         print(f"An error occurred: {str(e)}")
         return False
 
-
 @literalai_client.step(type="run")
-def get_chatgpt_diagnosis(disease):
+def get_chatgpt_diagnosis(disease, language):
     response = client.chat.completions.create(
         messages=[
             {
                 "role": "system",
-                "content": "You are an agricultural expert specializing in plant disease treatment. "
-                "Provide comprehensive, practical treatment recommendations.",
+                "content": "You are an agricultural expert specializing in plant disease treatment. Provide comprehensive, practical treatment recommendations.",
             },
             {
                 "role": "user",
-                "content": f"Based on this plant disease analysis, please show plant name and Disease name first then provide detailed treatment recommendations below 200 words : {disease}",
+                "content": f"Based on this plant disease analysis, please show plant name and Disease name first then provide detailed treatment recommendations below 200 words in {language}: {disease}",
             },
         ],
         model="gpt-4o-mini",
@@ -71,13 +87,22 @@ def get_chatgpt_diagnosis(disease):
     return response
 
 
+language = None
+
 @cl.on_chat_start
 async def start():
     await cl.Message(
-        content="Welcome To Harit Bot !! \nPlease upload the Image of the Plant and your query to get the Plant Disease information.",
+        content="Welcome To Harit Bot ",
         author="plantcure",
     ).send()
 
+    # language = await cl.AskUserMessage(content="What is your language?", timeout=90).send()
+    # language = language.get('output', '')
+    # cl.user_session.set("language", language)
+    # if language:
+    #     await cl.Message(
+    #         content=f"Your language is: {language}, now give input",
+    #     ).send()
 
 @cl.on_message
 async def process_message(msg: cl.Message):
@@ -100,13 +125,13 @@ async def process_message(msg: cl.Message):
     if msg.content:
         plain_text = msg.content.strip()
 
-    if not valid_images:
+    if not valid_images and not plain_text:
         await cl.Message(
             content="Invalid input. Please upload an image file or provide text input.",
             author="plantcure",
         ).send()
         return
-    
+
     isValidLeaf = True
     if valid_images:
         image = valid_images[0]
@@ -117,11 +142,11 @@ async def process_message(msg: cl.Message):
             )
             isValidLeaf = is_valid_leaf(file_content)
             file_content.close()
-            
+
             image_display = cl.Image(
                 path=image.path, name="uploaded_image", display="inline"
             )
-            
+
             await cl.Message(
                 content="Here is the uploaded image:", elements=[image_display]
             ).send()
@@ -135,7 +160,8 @@ async def process_message(msg: cl.Message):
                         author="plantcure",
                     ).send()
                 else:
-                    response = get_chatgpt_diagnosis(results)
+                    language_preference = cl.user_session.get("language", "English")
+                    response = get_chatgpt_diagnosis(results, language_preference)
                     await cl.Message(
                         content=f"{response.choices[0].message.content}", 
                         author="plantcure"
@@ -153,11 +179,21 @@ async def process_message(msg: cl.Message):
             ).send()
         return
 
-    if plain_text & isValidLeaf == True:
+    if plain_text:
         with literalai_client.thread(name="Example"):
-            response = get_chatgpt_diagnosis(msg.content)
+           language_preference = cl.user_session.get("language", "English")
+           response = get_chatgpt_diagnosis(msg.content, language_preference)
         await cl.Message(
             content=f"{response.choices[0].message.content}",
             author="plantcure"
         ).send()
         return
+
+# Mount Chainlit into FastAPI
+def start_chainlit():
+    mount_chainlit(app, target=__file__, path="/chainlit")
+
+if __name__ == "__main__":
+    import uvicorn
+    start_chainlit()
+    uvicorn.run(app, host="0.0.0.0", port=8000)

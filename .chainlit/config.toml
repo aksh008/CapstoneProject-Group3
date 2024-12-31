@@ -95,7 +95,8 @@ custom_font = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
     font_family = "Montserrat, sans-serif"
 # Override default MUI light theme. (Check theme.ts)
 [UI.theme.light]
-    #background = "#FAFAFA"
+    #background = "url('./public/background_white.jpg')"
+    #background-image = url('./public/background_white.jpg')
     #paper = "#FFFFFF"
 
     [UI.theme.light.primary]
@@ -103,8 +104,8 @@ custom_font = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
         #dark = "#980039"
         #light = "#FFE7EB"
     [UI.theme.light.text]
-        #primary = "#212121"
-        #secondary = "#616161"
+        primary = "#FFFFFF"
+        secondary = "#FFFFFF"
 
 # Override default MUI dark theme. (Check theme.ts)
 [UI.theme.dark]
