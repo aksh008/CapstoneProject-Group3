@@ -30,7 +30,6 @@ literalai_client.instrument_openai()
 app = FastAPI()
 api_router = APIRouter()
 
-
 app.include_router(api_router)
 # Add a default route
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
