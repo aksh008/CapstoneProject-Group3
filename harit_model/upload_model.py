@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 from dotenv import load_dotenv
+from pathlib import Path
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -48,6 +49,7 @@ def upload_files_to_git() :
         commit_msg = "commiting keras and h5 files to git"
         gitusername = os.getenv("GIT_USERNAME")
         gitaccesstoken = os.getenv("GIT_PERSONAL_ACCESS_TOKEN")
+        git_user_email = os.getenv("GIT_USER_EMAIL")
         
         # Define the repository path and the file to be added
         repo_path = PACKAGE_ROOT
@@ -55,7 +57,10 @@ def upload_files_to_git() :
         checkpoint_file = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
         model_h5_file = TRAINED_MODEL_DIR / f"{config.app_config.pipeline_save_file}{_version}.h5"
         
-        
+        #SET Git user identity
+        print("Configuring Git user identity...")
+        subprocess.run(['git', 'config', '--global', 'user.email', git_user_email], cwd=repo_path, check=True)
+        subprocess.run(['git', 'config', '--global', 'user.name', gitusername], cwd=repo_path, check=True)
         # Get repository URL
         result = subprocess.run(['git', 'remote', 'get-url', 'origin'],capture_output=True, text=True)
         old_url = result.stdout.strip()
@@ -70,15 +75,15 @@ def upload_files_to_git() :
         print ("new_url::", new_url)
         
         # Update remote URL
-        subprocess.run(['git', 'remote', 'set-url', 'origin', new_url])
-        print("Authentication updated successfully!")
+        subprocess.run(['git', 'remote', 'set-url', 'origin', new_url],cwd=repo_path, check=True)
+        print("Authentication completed successfully!")
         
         # git add command
         print ("git add command - adding 2 files")
         print ("checkpoint file:: ",checkpoint_file)
         print ("model h5 file:: ", model_h5_file)
-        subprocess.run(['git', 'add', checkpoint_file], check=True)
-        subprocess.run(['git', 'add', model_h5_file], check=True)
+        subprocess.run(['git', 'add', checkpoint_file], cwd=repo_path, check=True),
+        subprocess.run(['git', 'add', model_h5_file], cwd=repo_path, check=True)
         
         # git status command
         print ("git status command")
@@ -86,11 +91,11 @@ def upload_files_to_git() :
         
         # Commit the file
         print ("git commit comand")
-        subprocess.run(['git', 'commit', '-m', commit_msg], check=True)
+        subprocess.run(['git', 'commit', '-m', commit_msg], cwd=repo_path, check=True)
                                     
         # Try pushing
         print("Trying to push...")
-        result = subprocess.run(['git', 'push'], capture_output=True, text=True)
+        result = subprocess.run(['git', 'push'], cwd=repo_path, capture_output=True, text=True)
         if result.returncode == 0:
             print("Push successful!")
         else:
