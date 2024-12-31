@@ -3,6 +3,7 @@ import os
 import subprocess
 from dotenv import load_dotenv
 from pathlib import Path
+import git
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -60,21 +61,27 @@ def upload_files_to_git() :
         checkpoint_file = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
         model_h5_file = TRAINED_MODEL_DIR / f"{config.app_config.pipeline_save_file}{_version}.h5"
         
+        # Initialize the git repository
+        repo = git.Repo(repo_path)
+            
+
         #SET Git user identity
         print("Configuring Git user identity...")
         subprocess.run(['git', 'config', '--global', 'user.email', git_user_email], cwd=repo_path, check=True)
         subprocess.run(['git', 'config', '--global', 'user.name', gitusername], cwd=repo_path, check=True)
+        
         # Get repository URL
         result = subprocess.run(['git', 'remote', 'get-url', 'origin'],capture_output=True, text=True)
         old_url = result.stdout.strip()
         print("old url::", old_url)
             
         # Extract repository path
-        repo_path = old_url.split('github.com/')[-1]
-        print ("repo path::", repo_path)
-            
+        repo_name = old_url.split('github.com/')[-1]
+        print ("repo path::", repo_name)
+
+        
         # Create new URL with credentials
-        new_url = f'https://{gitusername}:{gitaccesstoken}@github.com/{repo_path}'
+        new_url = f'https://{gitusername}:{gitaccesstoken}@github.com/{repo_name}'
         print ("new_url::", new_url)
         
         # Update remote URL
