@@ -52,11 +52,9 @@ jobs:
           CLEARML_FILES_HOST: ${{ secrets.HCLEARML_FILES_HOST }}
           CLEARML_API_ACCESS_KEY: ${{ secrets.HCLEARML_API_ACCESS_KEY }}
           CLEARML_API_SECRET_KEY: ${{ secrets.HCLEARML_API_SECRET_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GIT_PERSONAL_ACCESS_TOKEN }}
+          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+          GIT_PERSONAL_ACCESS_TOKEN: ${{ secrets.GIT_PERSONAL_ACCESS_TOKEN }}
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          set -e
           python harit_model/train.py
           if [ $? -ne 0 ]; then
             echo "Training failed"

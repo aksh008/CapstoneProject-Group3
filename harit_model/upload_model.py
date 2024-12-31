@@ -1,14 +1,19 @@
 import sys
 import os
+import subprocess
+from dotenv import load_dotenv
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from harit_model.config.core import PACKAGE_ROOT, TRAINED_MODEL_CHECKPOINT, TRAINED_MODEL_DIR, config
 from harit_model import __version__ as _version
 
-import git
-import os
 
-def upload_new_checkpoint() :
+# Load environment variables
+load_dotenv()
+
+
+def upload_new_checkpoint() :    
     # Define the repository path and the file to be added
     repo_path = PACKAGE_ROOT
     repo_path = repo_path.parents[0]
@@ -37,3 +42,63 @@ def upload_new_checkpoint() :
 
     print(f'File {checkpoint_file} pushed to GitHub successfully.')
     print(f'File {model_h5_file} pushed to GitHub successfully.')
+    
+def upload_files_to_git() :
+    try: 
+        commit_msg = "commiting keras and h5 files to git"
+        gitusername = os.getenv("GIT_USERNAME")
+        gitaccesstoken = os.getenv("GIT_PERSONAL_ACCESS_TOKEN")
+        
+        # Define the repository path and the file to be added
+        repo_path = PACKAGE_ROOT
+        repo_path = repo_path.parents[0]
+        checkpoint_file = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
+        model_h5_file = TRAINED_MODEL_DIR / f"{config.app_config.pipeline_save_file}{_version}.h5"
+        
+        
+        # Get repository URL
+        result = subprocess.run(['git', 'remote', 'get-url', 'origin'],capture_output=True, text=True)
+        old_url = result.stdout.strip()
+        print("old url::", old_url)
+            
+        # Extract repository path
+        repo_path = old_url.split('github.com/')[-1]
+        print ("repo path::", repo_path)
+            
+        # Create new URL with credentials
+        new_url = f'https://{gitusername}:{gitaccesstoken}@github.com/{repo_path}'
+        print ("new_url::", new_url)
+        
+        # Update remote URL
+        subprocess.run(['git', 'remote', 'set-url', 'origin', new_url])
+        print("Authentication updated successfully!")
+        
+        # git add command
+        print ("git add command - adding 2 files")
+        print ("checkpoint file:: ",checkpoint_file)
+        print ("model h5 file", model_h5_file)
+        subprocess.run(['git', 'add', checkpoint_file], check=True)
+        subprocess.run(['git', 'add', model_h5_file], check=True)
+        
+        # Commit the file
+        print ("git commit comand")
+        subprocess.run(['git', 'commit', '-m', commit_msg], check=True)
+                                    
+        # Try pushing
+        print("Trying to push...")
+        result = subprocess.run(['git', 'push'], capture_output=True, text=True)
+        if result.returncode == 0:
+            print("Push successful!")
+        else:
+            print(f"Push failed: {result.stderr}")
+            
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        print("\nTroubleshooting steps:")
+        print("1. Verify your GitHub username")
+        print("2. Make sure your Personal Access Token is valid")
+        print("3. Check if you have repository access")
+        print("4. Verify your internet connection")
+    
+        
+        
