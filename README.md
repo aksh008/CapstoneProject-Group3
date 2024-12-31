@@ -15,6 +15,17 @@ Capstone Project for AIMLOps by Group 3 , this is for plant desease detection.
 
 ![image](https://github.com/user-attachments/assets/8ff644f0-50c3-46d4-bde0-c91f45560e1d)
 
+
+Steps to run the app:
+in local :
+1. create virtual env 
+2. install requirement.txt (including .whl file)
+3. create .env and store openai and literalai api key
+4. python app/main.py (path for main.py)
+5.localhost:8000/chainlit/ (for UI) , .localhost:8000/metrics/ (for Prometheus metrics).
+
+we are using literal ai to store feedback (https://www.literalai.com/)
+
 # Clear ML setup steps: 
 1. Install clear ML
     pip install clearml
