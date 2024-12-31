@@ -1,17 +1,18 @@
 from pathlib import Path
 import sys
+import os
+file = Path(__file__).resolve()
+root = file.parents[1]
+sys.path.append(str(root))
 
 import tensorflow as tf
 import numpy as np
 import json
+
 from tensorflow.keras.preprocessing.image import load_img, img_to_array, ImageDataGenerator
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
 from harit_model.config.core import INDICES_DIR
-
-file = Path(__file__).resolve()
-root = file.parents[1]
-sys.path.append(str(root))
 
 def preprocess_image(img_path, target_size=(224, 224)):
     print(f"Processing image: {img_path}")
