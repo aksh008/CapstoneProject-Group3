@@ -56,6 +56,7 @@ def upload_files_to_git() :
         # Define the repository path and the file to be added
         repo_path = PACKAGE_ROOT
         repo_path = repo_path.parents[0]
+        
         checkpoint_file = TRAINED_MODEL_CHECKPOINT / config.app_config.clearmlconfig.checkpoint_name
         model_h5_file = TRAINED_MODEL_DIR / f"{config.app_config.pipeline_save_file}{_version}.h5"
         
@@ -77,7 +78,7 @@ def upload_files_to_git() :
         print ("new_url::", new_url)
         
         # Update remote URL
-        subprocess.run(['git', 'remote', 'set-url', 'origin', new_url],cwd=repo_path, check=True)
+        subprocess.run(['git', 'remote', 'set-url', 'origin', new_url])
         print("Authentication completed successfully!")
         
         # git add command
