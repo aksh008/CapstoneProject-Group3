@@ -1,103 +1,140 @@
-# name: CI Pipeline
-# on:
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:
+name: CI Pipeline
 
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
-# jobs:
-#   train:
-    
-#     runs-on: ubuntu-latest
-#     strategy:
-#       fail-fast: false
-#     steps:
-#     - uses: actions/checkout@v3
-#     - name: Set up Python 3.11
-#       uses: actions/setup-python@v3
-#       with:
-#         python-version: '3.11'
-#     - name: Install dependencies
-#       run: pip install -r requirements/requirements.txt
-#     - name: Train and save pipeline
-#       run: python harit_model/train_pipeline.py
-#     - uses: actions/upload-artifact@v3
-#       with:
-#         name: my-trained-pipeline
-#         path: harit_model/trained_models
+jobs:
+  check_changes:
+    name: Check Changes in DATASET_VERSION
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.changed }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
-#   # test:
-#   #   needs: train
-#   #   runs-on: ubuntu-latest
-#   #   strategy:
-#   #     fail-fast: false
-#   #   steps:
-#   #   - uses: actions/checkout@v3
-#   #   - name: Set up Python 3.11
-#   #     uses: actions/setup-python@v3
-#   #     with:
-#   #       python-version: '3.11'
-#   #   - uses: actions/download-artifact@v3
-#   #     with:
-#   #       name: my-trained-pipeline
-#   #       path: harit_model/trained_models
-#   #   - name: Install dependencies
-#   #     run: pip install -r requirements/test_requirements.txt
-#   #   - name: Test with pytest
-#   #     run: pytest
+      - name: Check for Changes in DATASET_VERSION
+        id: check
+        run: |
+          if git diff --name-only HEAD^ HEAD | grep -q "DATASET_VERSION"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in DATASET_VERSION"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes in DATASET_VERSION"
+          fi
+      - name: Print should_run value
+        run: echo "should_run value is ${{ steps.check.outputs.changed }}" 
 
-#   build:
-#     needs: [train]
-#     runs-on: ubuntu-latest
-#     strategy:
-#       fail-fast: false
-#     steps:
-#     - uses: actions/checkout@v3
-#     - name: Set up Python 3.11
-#       uses: actions/setup-python@v3
-#       with:
-#         python-version: '3.11'
-#     - uses: actions/download-artifact@v3
-#       with:
-#         name: my-trained-pipeline
-#         path: harit_model/trained_models
-#     - name: Install dependencies
-#       run: pip install --upgrade build
-#     - name: Build package
-#       run: python -m build
-#     - uses: actions/upload-artifact@v3
-#       with:
-#         name: my-build-package
-#         path: dist/*.whl
+  train:
+    needs: check_changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        if: needs.check_changes.outputs.should_run == 'true'       
+        run: pip install -r requirements/requirements.txt
+      - name: Re-Train and Save Pipeline
+        if: needs.check_changes.outputs.should_run == 'true'   
+        env:
+          CLEARML_API_HOST: ${{ secrets.HCLEARML_API_HOST }}
+          CLEARML_WEB_HOST: ${{ secrets.HCLEARML_WEB_HOST }}
+          CLEARML_FILES_HOST: ${{ secrets.HCLEARML_FILES_HOST }}
+          CLEARML_API_ACCESS_KEY: ${{ secrets.HCLEARML_API_ACCESS_KEY }}
+          CLEARML_API_SECRET_KEY: ${{ secrets.HCLEARML_API_SECRET_KEY }}
+          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+          GIT_PERSONAL_ACCESS_TOKEN: ${{ secrets.GIT_PERSONAL_ACCESS_TOKEN }}
+          GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL}}
+        run: |
+          python harit_model/train.py
+          if [ $? -ne 0 ]; then
+            echo "Training failed"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v3
+        if: needs.check_changes.outputs.should_run == 'true' && success()
+        with:
+          name: harit-trained-pipeline
+          path: harit_model/trained_models
+      - name: Skip Training Notification
+        if: needs.check_changes.outputs.should_run == 'false'   
+        run: echo "No changes in DATASET_VERSION. Skipping training steps."
+  test:
+    needs: [check_changes, train]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v3
+        if: needs.check_changes.outputs.should_run == 'true'
+        with:
+          name: harit-trained-pipeline
+          path: harit_model/trained_models
+      - name: Install dependencies
+        run: pip install -r requirements/test_requirements.txt
+      - name: Run Tests with pytest
+        run: pytest
 
-#   push-image:
-#     needs: [train, build]
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Repo Checkout
-#       uses: actions/checkout@v3
+  build:
+    needs: [check_changes, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v3
+        if: needs.check_changes.outputs.should_run == 'true'
+        with:
+          name: harit-trained-pipeline
+          path: harit_model/trained_models
+      - name: Install Build Tool
+        run: pip install --upgrade build
+      - name: Build Package
+        run: python -m build
+      - name: Copy .whl file to harit_model_api
+        run: |
+          cp -f dist/*.whl harit_model_api/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-build-package
+          path: dist/*.whl
 
-#     - uses: actions/download-artifact@v3
-#       with:
-#         name: my-build-package
-#         path: harit_model_api
-
-#     - name: Login to Docker hub
-#       env:
-#         DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-#         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS_TOKEN }}
-#       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-
-#     - name: Build the Docker image for Fastapi app
-#       env:
-#         DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-#       run: docker build . -f Dockerfile -t $DOCKER_USER/harit-fastapi:latest
-
-#     - name: Push the Docker Image
-#       env:
-#         DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-#       run: docker push $DOCKER_USER/harit-fastapi
-
-#     - name: Logout to Docker hub
-#       run: docker logout
+  push-image:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: my-build-package
+          path: harit_model_api
+      - name: Login to Docker Hub
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS_TOKEN }}
+        run: sudo docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: Build Docker Image for Chainlit App
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+        run: sudo docker build . -f Dockerfile -t $DOCKER_USER/harit-chainlit:latest
+      - name: Push Docker Image
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
+        run: sudo docker push $DOCKER_USER/harit-chainlit
+      - name: Logout from Docker Hub
+        run: docker logout
