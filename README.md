@@ -9,11 +9,9 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
 <img width="594" alt="image" src="https://github.com/aksh008/CapstoneProject-Group3/blob/main/pd-7.png">
 
 ### High level Architecture
-
 ![image](https://github.com/user-attachments/assets/5cff3bb9-7e88-434c-8d6d-2c932fc145d6)
 
 ### Model Training Testing Pipeline flow
-
 ![image](https://github.com/user-attachments/assets/8ff644f0-50c3-46d4-bde0-c91f45560e1d)
 
 
@@ -65,5 +63,3 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
 ##### Steps for setting python 3.11 version on Codespace
 https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/setting-up-your-python-project-for-codespaces
 
-##### Docker steps 
-1. To build after .h5 is copied to api foler - `docker build -t harit_model_api .`
