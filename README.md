@@ -35,7 +35,8 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
  Literal ai to store user feedback (https://www.literalai.com/) 
   - Creds shared on demand 
 
-#### Setting up Clear ML on local dev box
+## Clear ML Related
+#### Setting up on local dev box
 1. Install clear ML
     `pip install clearml`
 2. run command
@@ -50,11 +51,16 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
             "secret_key" = "XXX"
         }
     }
-##### Steps to get access_key and secret_key from ClearML
+##### Steps to get access_key and secret_key 
 1. Log in to your ClearML account at [app.clear.ml.](https://app.clear.ml/)
 2. Navigate to Settings > Profile.
 3. In the API workspace section, Access Key and secret details should be present if not create new credentials
 4. Copy these keys and update configuration mentioned in previous step
+
+##### Create a new dataset add files through commands 
+1. Create project and dataset `clearml-data create --project "Harit_CapStone_Project" --name "Harit_DataSet"`
+2. Add files from local to clearml ` clearml-data add --files <dataset>`  <dataset denotes absolute loction on local dev box>
+3. Complete data upload `clearml-data close`
 
 ##### TODO
 1. Think about retraining plan - based on data set changes or user feedback
