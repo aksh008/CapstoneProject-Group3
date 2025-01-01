@@ -1,7 +1,8 @@
 
 # CapstoneProject-Group3
 # Project Name :  Plant Disease Detection
-#Harit Bot
+# Harit Bot
+
 Capstone Project for AIMLOps by Group 3 , this is for plant desease detection.
  
 
