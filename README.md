@@ -20,10 +20,18 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
 #### Steps to run app on local dev box :
 1. create virtual env 
 2. install requirement.txt (including .whl file -generated form python build command ran on harit model)
-3. create .env and store openai and literalai api key (optionallly pass the varaible in command line only
-    Ex: `docker run -e LITERAL_API_KEY='xxxxxxxxx' -e OPENAI_API_KEY='yyyyyy' -it -d -p 8000:8000 aksh008/harit-chainlit`
-5. Traverse ot hait_model_api and run the command `python app/main.py` 
+3. create new file by name `.env` and store openai and literalai api key as key value pair (optionallly pass key values in command line) 
+    Ex:
+5. Traverse to hait_model_api folder and run command `python app/main.py` 
 6. localhost:8000/chainlit/ (for UI) , localhost:8000/metrics/ (for Prometheus metrics).
+7. Docker steps after model is trained and h5 file is copied from trained model to api folder
+   
+   a. ` docker build -t harit_model_api .`
+    
+   b. to pull existing trained model from docker repo ` docker pull aksh008/harit-chainlit`
+   
+   c. Run docker image pulled from repo -  `docker run -e LITERAL_API_KEY='xxxxxxxxx' -e OPENAI_API_KEY='yyyyyy' -it -d -p 8000:8000 aksh008/harit-chainlit`
+   
 
 ###### Note:
  Literal ai to store user feedback (https://www.literalai.com/) 
@@ -54,5 +62,8 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
 1. Think about retraining plan - based on data set changes or user feedback
 2. Local language support in UI
 
-#### Steps for setting python 3.11 version on Codespace
+##### Steps for setting python 3.11 version on Codespace
 https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/setting-up-your-python-project-for-codespaces
+
+##### Docker steps 
+1. To build after .h5 is copied to api foler - `docker build -t harit_model_api .`
