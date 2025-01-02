@@ -185,3 +185,7 @@ harit_model_api/app/.DS_Store
 harit_model/dataset/.DS_Store
 harit_model/logs/
 harit_model_api/.chainlit/translations/
+
+
+.codegpt/
+.files/
