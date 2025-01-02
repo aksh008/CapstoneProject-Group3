@@ -8,11 +8,9 @@ import chainlit as cl
 from openai import OpenAI
 from literalai import LiteralClient
 from harit_model.predict import make_prediction
-# from api import api_router
-# from harit_model_api.app import __version__, schemas
-# from api import predict
 from chainlit.utils import mount_chainlit
 from prometheus_fastapi_instrumentator import Instrumentator
+from core import load_languages
 
 # Load environment variables
 load_dotenv()
@@ -29,6 +27,7 @@ literalai_client.instrument_openai()
 # FastAPI app initialization
 app = FastAPI()
 api_router = APIRouter()
+
 
 app.include_router(api_router)
 # Add a default route
@@ -95,13 +94,20 @@ async def start():
         author="plantcure",
     ).send()
 
-    # language = await cl.AskUserMessage(content="What is your language?", timeout=90).send()
-    # language = language.get('output', '')
-    # cl.user_session.set("language", language)
-    # if language:
-    #     await cl.Message(
-    #         content=f"Your language is: {language}, now give input",
-    #     ).send()
+
+    languages = load_languages()
+
+    actions = [
+        cl.Action(name=lang, value=lang, label=lang)
+        for lang in languages
+    ]
+    
+    language = await cl.AskActionMessage(
+        content="Please select language!",
+        actions=actions,
+        timeout=120
+    ).send()
+    cl.user_session.set("language", language.get("value"))
 
 @cl.on_message
 async def process_message(msg: cl.Message):
@@ -147,7 +153,7 @@ async def process_message(msg: cl.Message):
             )
 
             await cl.Message(
-                content="Here is the uploaded image:", elements=[image_display]
+                content="uploaded image:", elements=[image_display]
             ).send()
             if isValidLeaf == True:
                 results = make_prediction(image.path)
@@ -155,7 +161,7 @@ async def process_message(msg: cl.Message):
                 is_healthy = disease_name.lower() == "healthy"
                 if is_healthy:
                     await cl.Message(
-                        content=f"Plant name : {plant_name} and Plant leafs are healthy",
+                        content=f"Plant name : {plant_name} and Plant leaf is healthy",
                         author="plantcure",
                     ).send()
                 else:
@@ -167,7 +173,7 @@ async def process_message(msg: cl.Message):
                     ).send()
             else:
                 await cl.Message(
-                    content="Please add a valid leaf or a plant image!", 
+                    content="Please provide a valid leaf or a plant image!", 
                     author="plantcure"
                 ).send()
 
