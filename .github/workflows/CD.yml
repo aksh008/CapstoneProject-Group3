@@ -12,6 +12,17 @@ jobs:
     runs-on: CD-runner
 
     steps:
+      - name: Check Disk Usage (Before)
+        run: df -h
+  
+      - name: Clean Up Docker Resources
+        run: |
+          sudo docker system prune -af
+          sudo docker volume prune -f
+  
+      - name: Clear Pip Cache
+        run: sudo rm -rf /root/.cache/pip/*
+        
       - name: Pull Docker Image
         env: 
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
