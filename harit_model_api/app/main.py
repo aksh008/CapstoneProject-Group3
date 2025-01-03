@@ -12,6 +12,14 @@ from chainlit.utils import mount_chainlit
 from prometheus_fastapi_instrumentator import Instrumentator
 from core import load_languages
 
+####################################PROMETHEUS RELATED LIBRARY IMPORT######################################
+from prometheus_client import Gauge, Counter, Histogram, CollectorRegistry, REGISTRY
+import psutils
+from fastapi import FastAPI, Request
+import time
+###########################################################################################################
+
+
 # Load environment variables
 load_dotenv()
 
@@ -27,6 +35,115 @@ literalai_client.instrument_openai()
 # FastAPI app initialization
 app = FastAPI()
 api_router = APIRouter()
+
+
+#############################PROMETHEUS CODE START######################################################
+
+total_latency = 0.0
+request_count = 0
+# Helper function to get or create metrics
+def get_or_create_metric(metric_type, name, description, labelnames=None):
+    if name in REGISTRY._names_to_collectors:
+        collector = REGISTRY._names_to_collectors[name]
+        if metric_type == "gauge" and isinstance(collector, Gauge):
+            return collector
+        elif metric_type == "counter" and isinstance(collector, Counter):
+            return collector
+        elif metric_type == "histogram" and isinstance(collector, Histogram):
+            return collector
+        else:
+            raise ValueError(f"Metric '{name}' already exists and is not a '{metric_type}'.")
+    else:
+        if metric_type == "gauge":
+            return Gauge(name, description)
+        elif metric_type == "counter":
+            return Counter(name, description, labelnames=labelnames or [])
+        elif metric_type == "histogram":
+            return Histogram(name, description, labelnames=labelnames or [])
+        else:
+            raise ValueError(f"Unknown metric type: {metric_type}")
+
+# Define Prometheus metrics
+CPU_USAGE = get_or_create_metric("gauge", "cpu_usage_percent", "CPU usage in percentage")
+MEMORY_USAGE = get_or_create_metric("gauge", "memory_usage_bytes", "Memory usage in bytes")
+HTTP_REQUEST_COUNT = get_or_create_metric(
+    "counter",
+    "http_request_count",
+    "Number of HTTP requests",
+    labelnames=["method", "endpoint"]
+)
+HTTP_REQUEST_COUNT_TOTAL_HARIT = get_or_create_metric(
+    "counter",
+    "http_request_count_total_harit",
+    "Total number of HTTP requests (including default and /chainlit)",
+)
+AVERAGE_LATENCY = get_or_create_metric(
+    "gauge",
+    "average_request_latency_seconds",
+    "Average latency of HTTP requests in seconds"
+)
+CONCURRENT_REQUESTS = get_or_create_metric(
+    "gauge",
+    "concurrent_requests",
+    "Number of concurrent requests being processed"
+)
+
+# Function to update system metrics
+def update_system_metrics():
+    # Track CPU usage of only this FastAPI process
+    process = psutil.Process(os.getpid())
+    
+     # To ensure a more accurate reading, get CPU usage and store it
+    cpu_usage = process.cpu_percent(interval=None)  # A shorter interval will allow better real-time tracking
+    
+    # Set the CPU usage metric with more accurate and real-time data
+    CPU_USAGE.set(cpu_usage)
+    # Use only memory utilized by the current FastAPI process
+    MEMORY_USAGE.set(process.memory_info().rss / (1024 ** 3))  # Convert to GB
+
+
+# Middleware to track latency and request count
+@app.middleware("http")
+async def metrics_middleware(request: Request, call_next):
+    global total_latency, request_count
+
+    # Exclude `/metrics` endpoint from tracking
+    if request.url.path == "/metrics":
+        return await call_next(request)
+
+    # Track requests to `/` and `/chainlit`
+    if request.url.path == "/" or request.url.path.startswith("/chainlit"):
+        HTTP_REQUEST_COUNT_TOTAL_HARIT.inc()
+
+    # Increment concurrent requests
+    CONCURRENT_REQUESTS.inc()
+
+    try:
+        # Track start time for latency calculation
+        start_time = time.time()
+        response = await call_next(request)
+        process_time = time.time() - start_time
+
+        # Update Prometheus metrics
+        HTTP_REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path).inc()  # Total requests
+        total_latency += process_time
+        request_count += 1
+
+        # Calculate and set average latency
+        AVERAGE_LATENCY.set(total_latency / request_count if request_count > 0 else 0)
+
+        return response
+    finally:
+        # Ensure concurrent requests are never less than 1 if any request has been made
+        if CONCURRENT_REQUESTS._value.get() > 1:
+            CONCURRENT_REQUESTS.dec()
+        elif CONCURRENT_REQUESTS._value.get() == 1:
+            # Do not decrement to 0 for single active request
+            pass
+
+
+#############################PROMETHEUS CODE END########################################################
+
 
 
 app.include_router(api_router)

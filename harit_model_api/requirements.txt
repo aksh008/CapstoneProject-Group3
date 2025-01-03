@@ -11,6 +11,7 @@ openai
 fastapi==0.115.6
 pydantic>=1.7.4,<2.0.0
 scikit-learn
-prometheus_fastapi_instrumentator
-
+prometheus_fastapi_instrumentator #prometheus related
+prometheus_client #prometheus related
+psutils #prometheus related
 harit_model-2-py3-none-any.whl
