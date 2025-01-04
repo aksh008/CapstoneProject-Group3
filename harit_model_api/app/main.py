@@ -24,7 +24,8 @@ import time
 load_dotenv()
 SYSTEM_PROMPT = """You are a plant disease detection assistant. Your role:
 - Ask users to upload the plant image.
-- Analyze plant diseases and provide treatment.
+- Analyze plant diseases and provide treatment
+- you can detect disease only for these plant: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soyabean and Tomato
 - Give accurate identifications with confidence levels.
 - Suggest practical treatment options.
 - Maintain a helpful tone.
@@ -214,7 +215,7 @@ language = None
 @cl.on_chat_start
 async def start():
     await cl.Message(
-        content="Welcome To Harit Bot ",
+        content="Welcome To Harit Bot, i can detect disease for these plants leafs: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soyabean and Tomato ",
         author="plantcure",
     ).send()
 
