@@ -22,6 +22,13 @@ import time
 
 # Load environment variables
 load_dotenv()
+SYSTEM_PROMPT = """You are a plant disease detection assistant. Your role:
+- Ask users to upload the plant image.
+- Analyze plant diseases and provide treatment.
+- Give accurate identifications with confidence levels.
+- Suggest practical treatment options.
+- Maintain a helpful tone.
+- Include safety warnings."""
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
@@ -190,7 +197,7 @@ def get_chatgpt_diagnosis(disease, language):
         messages=[
             {
                 "role": "system",
-                "content": "You are an agricultural expert specializing in plant disease treatment. Provide comprehensive, practical treatment recommendations.",
+                "content": SYSTEM_PROMPT,
             },
             {
                 "role": "user",
