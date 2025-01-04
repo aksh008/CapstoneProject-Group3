@@ -9,7 +9,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: CD-runner
+    runs-on: CD-runner-2
 
     steps:
       - name: Check Disk Usage (Before)
