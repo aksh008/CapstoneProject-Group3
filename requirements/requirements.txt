@@ -16,3 +16,4 @@ clearml
 matplotlib
 seaborn
 gitpython
+uvicorn[standard] 
