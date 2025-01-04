@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import os
 from pathlib import Path
@@ -211,6 +212,27 @@ def get_chatgpt_diagnosis(disease, language):
 
 language = None
 
+async def ask_language():
+    languages = load_languages()
+    actions = [
+        cl.Action(name=lang, value=lang, label=lang)
+        for lang in languages
+    ]
+    msg = cl.AskActionMessage(
+        content="Please select a language!",
+        actions=actions,
+    )
+    try:
+        language = await asyncio.wait_for(msg.send(), timeout=120)
+        selected_language = language.get("value")
+        await cl.Message(f"You selected: {selected_language}").send()
+    except asyncio.TimeoutError:
+        selected_language = "english"
+        await msg.remove()
+        await cl.Message("No language selected within the time limit. Default language set to English.").send()
+    
+    return selected_language
+
 @cl.on_chat_start
 async def start():
     await cl.Message(
@@ -218,20 +240,8 @@ async def start():
         author="plantcure",
     ).send()
 
-
-    languages = load_languages()
-
-    actions = [
-        cl.Action(name=lang, value=lang, label=lang)
-        for lang in languages
-    ]
-    
-    language = await cl.AskActionMessage(
-        content="Please select language!",
-        actions=actions,
-        timeout=120
-    ).send()
-    cl.user_session.set("language", language.get("value"))
+    selected_language = await ask_language()
+    cl.user_session.set("language", selected_language)
 
 @cl.on_message
 async def process_message(msg: cl.Message):
