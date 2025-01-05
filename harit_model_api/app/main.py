@@ -1,4 +1,5 @@
 import base64
+from gettext import translation
 import os
 from pathlib import Path
 from fastapi import FastAPI, UploadFile, File, HTTPException, APIRouter
@@ -10,7 +11,7 @@ from literalai import LiteralClient
 from harit_model.predict import make_prediction
 from chainlit.utils import mount_chainlit
 from prometheus_fastapi_instrumentator import Instrumentator
-from core import load_languages
+from core import load_languages, translations, language_mapping
 
 ####################################PROMETHEUS RELATED LIBRARY IMPORT######################################
 from prometheus_client import Gauge, Counter, Histogram, CollectorRegistry, REGISTRY
@@ -153,7 +154,11 @@ async def metrics_middleware(request: Request, call_next):
 
 #############################PROMETHEUS CODE END########################################################
 
-
+def get_translated_message(key, language, *args):
+    if language not in language_mapping:
+        language = "English"  # Default to English if language not found
+    message = translations[language].get(key, translations["English"][key])
+    return message.format(*args) if args else message
 
 app.include_router(api_router)
 # Add a default route
@@ -215,31 +220,35 @@ language = None
 
 @cl.on_chat_start
 async def start():
-    await cl.Message(
-        content="Welcome To Harit Bot, i can detect disease for these plants leafs: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soyabean and Tomato ",
-        author="plantcure",
-    ).send()
-
-
     languages = load_languages()
-
     actions = [
-        cl.Action(name=lang, value=lang, label=lang)
+        cl.Action(
+            name=lang,
+            value=lang,
+            label=language_mapping.get(lang, lang)  # Use native name if available, otherwise use English name
+        )
         for lang in languages
     ]
     
     language = await cl.AskActionMessage(
         content="Please select language!",
         actions=actions,
-        timeout=120
     ).send()
     cl.user_session.set("language", language.get("value"))
+    
+    current_language = cl.user_session.get("language", "en")
+    await cl.Message(
+        content= get_translated_message("welcome", current_language), 
+        author="plantcure",
+    ).send()
+
 
 @cl.on_message
 async def process_message(msg: cl.Message):
     allowed_image_extensions = [".jpg", ".jpeg", ".png", ".heic", ".heif"]
     valid_images = []
     plain_text = None
+    current_language = cl.user_session.get("language", "en")
 
     for element in msg.elements:
         if hasattr(element, "name"):
@@ -248,7 +257,7 @@ async def process_message(msg: cl.Message):
                 valid_images.append(element)
             else:
                 await cl.Message(
-                    content=f"Unsupported file type: {extension}. Only Images with .jpg, .jpeg, .png, .heic is allowed",
+                    content= get_translated_message("unsupported_file", current_language, extension, extension), 
                     author="plantcure",
                 ).send()
                 return
@@ -258,7 +267,7 @@ async def process_message(msg: cl.Message):
 
     if not valid_images and not plain_text:
         await cl.Message(
-            content="Invalid input. Please upload an image file or provide text input.",
+            content= get_translated_message("invalid_input", current_language), 
             author="plantcure",
         ).send()
         return
@@ -279,7 +288,8 @@ async def process_message(msg: cl.Message):
             )
 
             await cl.Message(
-                content="uploaded image:", elements=[image_display]
+                content= get_translated_message("uploaded_image", current_language), 
+                elements=[image_display]
             ).send()
             if isValidLeaf == True:
                 results = make_prediction(image.path)
@@ -287,7 +297,7 @@ async def process_message(msg: cl.Message):
                 is_healthy = disease_name.lower() == "healthy"
                 if is_healthy:
                     await cl.Message(
-                        content=f"Plant name : {plant_name} and Plant leaf is healthy",
+                        content= get_translated_message("healthy_plant", current_language, plant_name), 
                         author="plantcure",
                     ).send()
                 else:
@@ -299,13 +309,13 @@ async def process_message(msg: cl.Message):
                     ).send()
             else:
                 await cl.Message(
-                    content="Please provide a valid leaf or a plant image!", 
+                    content= get_translated_message("provide_valid_image", current_language), 
                     author="plantcure"
                 ).send()
 
         except Exception as e:
             await cl.Message(
-                content=f"An error occurred during image processing: {str(e)}",
+                content= get_translated_message("error_processing", current_language, str(e)), 
                 author="plantcure"
             ).send()
         return

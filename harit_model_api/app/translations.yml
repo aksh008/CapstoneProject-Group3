@@ -1,0 +1,32 @@
+translations:
+  English:
+    welcome: "Welcome To Harit Bot, I can detect diseases for these plant leaves: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soybean and Tomato"
+    unsupported_file: "Unsupported file type: {}. Only Images with .jpg, .jpeg, .png, .heic is allowed"
+    invalid_input: "Invalid input. Please upload an image file or provide text input."
+    uploaded_image: "uploaded image:"
+    healthy_plant: "Plant name : {} and Plant leaf is healthy"
+    provide_valid_image: "Please provide a valid leaf or a plant image!"
+    error_processing: "An error occurred during image processing: {}"
+
+  Hindi:
+    welcome: "हरित बॉट में आपका स्वागत है, मैं इन पौधों की पत्तियों के लिए रोगों का पता लगा सकता हूं: सेब, ब्लूबेरी, चेरी, मक्का, अंगूर, संतरा, आड़ू, शिमला मिर्च, आलू, रास्पबेरी, सोयाबीन और टमाटर"
+    unsupported_file: "असमर्थित फ़ाइल प्रकार: {}। केवल .jpg, .jpeg, .png, .heic वाली छवियों की अनुमति है"
+    invalid_input: "अमान्य इनपुट। कृपया एक छवि फ़ाइल अपलोड करें या टेक्स्ट इनपुट प्रदान करें।"
+    uploaded_image: "अपलोड की गई छवि:"
+    healthy_plant: "पौधे का नाम : {} और पौधे की पत्ती स्वस्थ है"
+    provide_valid_image: "कृपया एक वैध पत्ती या पौधे की छवि प्रदान करें!"
+    error_processing: "छवि प्रसंस्करण के दौरान एक त्रुटि हुई: {}"
+
+  Kannada:
+    welcome: "ಹರಿತ್ ಬಾಟ್‌ಗೆ ಸುಸ್ವಾಗತ, ನಾನು ಈ ಸಸ್ಯಗಳ ಎಲೆಗಳಿಗಾಗಿ ರೋಗಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಬಲ್ಲೆ: ಸೇಬು, ಬ್ಲೂಬೆರಿ, ಚೆರಿ, ಜೋಳ, ದ್ರಾಕ್ಷಿ, ಕಿತ್ತಳೆ, ಪೀಚ್, ಮೆಣಸಿನಕಾಯಿ, ಆಲೂಗಡ್ಡೆ, ರಾಸ್ಪ್‌ಬೆರಿ, ಸೋಯಾಬೀನ್ ಮತ್ತು ಟೊಮೇಟೊ"
+    unsupported_file: "ಬೆಂಬಲಿಸದ ಫೈಲ್ ಪ್ರಕಾರ: {}. ಕೇವಲ .jpg, .jpeg, .png, .heic ಚಿತ್ರಗಳನ್ನು ಮಾತ್ರ ಅನುಮತಿಸಲಾಗಿದೆ"
+    invalid_input: "ಅಮಾನ್ಯ ಇನ್‌ಪುಟ್. ದಯವಿಟ್ಟು ಚಿತ್ರ ಫೈಲ್ ಅನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ಪಠ್ಯ ಇನ್‌ಪುಟ್ ಒದಗಿಸಿ."
+    uploaded_image: "ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಚಿತ್ರ:"
+    healthy_plant: "ಸಸ್ಯದ ಹೆಸರು : {} ಮತ್ತು ಸಸ್ಯದ ಎಲೆ ಆರೋಗ್ಯಕರವಾಗಿದೆ"
+    provide_valid_image: "ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಎಲೆ ಅಥವಾ ಸಸ್ಯದ ಚಿತ್ರವನ್ನು ಒದಗಿಸಿ!"
+    error_processing: "ಚಿತ್ರ ಸಂಸ್ಕರಣೆಯ ಸಮಯದಲ್ಲಿ ದೋಷ ಸಂಭವಿಸಿದೆ: {}"
+
+language_mapping:
+  English: "English"
+  Hindi: "हिन्दी"
+  Kannada: "ಕನ್ನಡ"

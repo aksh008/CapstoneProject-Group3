@@ -104,8 +104,8 @@ custom_font = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
         #dark = "#980039"
         #light = "#FFE7EB"
     [UI.theme.light.text]
-        primary = "#FFFFFF"
-        secondary = "#FFFFFF"
+        primary = "#000000"
+        secondary = "#000000"
 
 # Override default MUI dark theme. (Check theme.ts)
 [UI.theme.dark]
@@ -117,8 +117,8 @@ custom_font = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
         #dark = "#980039"
         #light = "#FFE7EB"
     [UI.theme.dark.text]
-        #primary = "#EEEEEE"
-        #secondary = "#BDBDBD"
+        primary = "#000000"
+        secondary = "#000000"
 
 [meta]
 generated_by = "1.3.2"
