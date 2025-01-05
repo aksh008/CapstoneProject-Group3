@@ -2,7 +2,7 @@ from pathlib import Path
 import sys
 import os
 file = Path(__file__).resolve()
-root = file.parents[1]
+root = file.parents[2]
 sys.path.append(str(root))
 
 from harit_model import config

@@ -26,7 +26,7 @@ load_dotenv()
 SYSTEM_PROMPT = """You are a plant disease detection assistant. Your role:
 - Ask users to upload the plant image.
 - Analyze plant diseases and provide treatment
-- you can detect disease only for these plant: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soyabean and Tomato
+- you can detect disease only for these plant: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soyabean, Strawberry, Squash and Tomato
 - You Must politely deny user in case user ask for detecting disease for any other plants.
 - Give accurate identifications with confidence levels.
 - Suggest practical treatment options.
@@ -168,35 +168,6 @@ def root():
     return {"message": "Welcome to the FastAPI application with Prometheus monitoring! Go to /chainlit for the chatbot UI."}
 
 # Chainlit integration
-@literalai_client.step(type="run")
-def is_valid_leaf(image_content):
-    prompt = "Check if the image is a plant or a leaf image. The answer should be either LEAF or NOT_LEAF."
-    base64_image = base64.b64encode(image_content.read()).decode("utf-8")
-
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}"
-                            },
-                        },
-                    ],
-                }
-            ],
-            max_tokens=300,
-        )
-        result = response.choices[0].message.content.strip().upper()
-        return "LEAF" in result and "NOT" not in result
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        return False
 
 @literalai_client.step(type="run")
 def get_chatgpt_diagnosis(disease, language):
@@ -215,6 +186,22 @@ def get_chatgpt_diagnosis(disease, language):
     )
     return response
 
+@literalai_client.step(type="run")
+def get_chatgpt_text_response(text, language):
+    response = client.chat.completions.create(
+        messages=[
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT,
+            },
+            {
+                "role": "user",
+                "content": f"Response to the user quesry about user query {text} in {language} in 200 words or less",
+            },
+        ],
+        model="gpt-4o-mini",
+    )
+    return response
 
 language = None
 
@@ -281,20 +268,25 @@ async def process_message(msg: cl.Message):
             upload_file = UploadFile(
                 filename=os.path.basename(image.path), file=file_content
             )
-            isValidLeaf = is_valid_leaf(file_content)
             file_content.close()
 
             image_display = cl.Image(
                 path=image.path, name="uploaded_image", display="inline"
             )
+            results = make_prediction(image.path)
+            plant_name, disease_name = results.split("___")
+            print("plant name: ", plant_name)
+            print("disease_name :", disease_name)
 
+            if(plant_name == "Random"):
+                isValidLeaf = False
+                
             await cl.Message(
                 content= get_translated_message("uploaded_image", current_language), 
                 elements=[image_display]
             ).send()
-            if isValidLeaf == True:
-                results = make_prediction(image.path)
-                plant_name, disease_name = results.split("___")
+            
+            if isValidLeaf == True:                
                 is_healthy = disease_name.lower() == "healthy"
                 if is_healthy:
                     await cl.Message(
@@ -321,10 +313,10 @@ async def process_message(msg: cl.Message):
             ).send()
         return
 
-    if plain_text:
+    if not valid_images and plain_text:
         with literalai_client.thread(name="Example"):
            language_preference = cl.user_session.get("language", "English")
-           response = get_chatgpt_diagnosis(msg.content, language_preference)
+           response = get_chatgpt_text_response(msg.content, language_preference)
         await cl.Message(
             content=f"{response.choices[0].message.content}",
             author="plantcure"
