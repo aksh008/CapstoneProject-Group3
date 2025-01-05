@@ -1,7 +1,7 @@
 
 # CapstoneProject-Group3
 # Project Name :  Plant Disease Detection
-# Harit Bot
+# Harit Bot - www.haritbot.com
 
 Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
  
@@ -9,10 +9,13 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
 <img width="594" alt="image" src="https://github.com/aksh008/CapstoneProject-Group3/blob/main/pd-7.png">
 
 ### High level Architecture
-![image](https://github.com/user-attachments/assets/5cff3bb9-7e88-434c-8d6d-2c932fc145d6)
+<img width="563" alt="Architecture-HaritBot" src="https://github.com/user-attachments/assets/5d603d34-2e65-4af7-82f3-e9834058b4e7" />
+
 
 ### Model Training Testing Pipeline flow
-![image](https://github.com/user-attachments/assets/8ff644f0-50c3-46d4-bde0-c91f45560e1d)
+![CICD-FLow](https://github.com/user-attachments/assets/e5151f25-897d-46ac-8118-25e1bf277c2f)
+
+
 
 
 #### Steps to run app on local dev box :
@@ -62,11 +65,7 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
 2. Add files from local to clearml ` clearml-data add --files <dataset>`  <dataset denotes absolute loction on local dev box>
 3. Complete data upload `clearml-data close`
 
-##### TODO
-1. Think about retraining plan - based on data set changes or user feedback
-2. Local language support in UI
 
 ##### Steps for setting python 3.11 version on Codespace
 https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/setting-up-your-python-project-for-codespaces
 
-API KEY ##
