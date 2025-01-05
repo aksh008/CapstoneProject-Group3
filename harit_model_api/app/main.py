@@ -25,9 +25,9 @@ import time
 load_dotenv()
 SYSTEM_PROMPT = """You are a plant disease detection assistant. Your role:
 - Ask users to upload the plant image.
-- Analyze plant diseases and provide treatment
+- Once you get {Plant_Name} and {disease_name}, must Analyze plant diseases and provide treatment and provide all information to user.
 - you can detect disease only for these plant: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soyabean, Strawberry, Squash and Tomato
-- You Must politely deny user in case user ask for detecting disease for any other plants.
+- You Must politely deny the user in case user ask for detecting disease for any other plants.
 - Give accurate identifications with confidence levels.
 - Suggest practical treatment options.
 - Maintain a helpful tone.
@@ -196,7 +196,7 @@ def get_chatgpt_text_response(text, language):
             },
             {
                 "role": "user",
-                "content": f"Response to the user quesry about user query {text} in {language} in 200 words or less",
+                "content": f"Respond to the user query {text} in {language} in 200 words or less",
             },
         ],
         model="gpt-4o-mini",
@@ -278,7 +278,7 @@ async def process_message(msg: cl.Message):
             print("plant name: ", plant_name)
             print("disease_name :", disease_name)
 
-            if(plant_name == "Random"):
+            if(plant_name == "RandomImage"):
                 isValidLeaf = False
                 
             await cl.Message(
