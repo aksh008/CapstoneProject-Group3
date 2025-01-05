@@ -1,5 +1,5 @@
 
-# CapstoneProject-Group3
+# AIMLOps CapstoneProject-Group3
 # Project Name :  Plant Disease Detection
 # Harit Bot - www.haritbot.com
 
