@@ -54,8 +54,8 @@ edit_message = true
 
 [UI]
 # Name of the assistant.
-name = "PlantCure"
-favicon = "public/favicon.png"
+name = "Harit bot"
+favicon = "public/favicon.ico"
 custom_css = '/public/stylesheet.css'
 
 # Description of the assistant. This is used for HTML tags.
@@ -90,7 +90,7 @@ custom_font = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
 # custom_build = "./public/build"
 
 [UI.theme]
-    default = "dark"
+    default = "light"
     #layout = "wide"
     font_family = "Montserrat, sans-serif"
 # Override default MUI light theme. (Check theme.ts)

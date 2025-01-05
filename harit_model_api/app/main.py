@@ -234,7 +234,8 @@ async def start():
         content="Please select language!",
         actions=actions,
     ).send()
-    cl.user_session.set("language", language.get("value"))
+    if language is not None:
+        cl.user_session.set("language", language.get("value"))
     
     current_language = cl.user_session.get("language", "en")
     await cl.Message(
