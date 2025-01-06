@@ -8,11 +8,12 @@ from dotenv import load_dotenv
 import chainlit as cl
 from openai import OpenAI
 from literalai import LiteralClient
-from harit_model.predict import make_prediction
+# from harit_model.predict import make_prediction
+from api import predict
 from chainlit.utils import mount_chainlit
 from prometheus_fastapi_instrumentator import Instrumentator
 from core import load_languages, translations, language_mapping
-
+from api import api_router
 ####################################PROMETHEUS RELATED LIBRARY IMPORT######################################
 from prometheus_client import Gauge, Counter, Histogram, CollectorRegistry, REGISTRY
 import psutils
@@ -44,9 +45,9 @@ literalai_client.instrument_openai()
 
 # FastAPI app initialization
 app = FastAPI()
-api_router = APIRouter()
+# api_router = APIRouter()
 
-
+app.include_router(api_router, prefix="/api/v1")
 #############################PROMETHEUS CODE START######################################################
 
 total_latency = 0.0
@@ -230,7 +231,7 @@ async def start():
         author="plantcure",
     ).send()
 
-
+from io import BytesIO
 @cl.on_message
 async def process_message(msg: cl.Message):
     allowed_image_extensions = [".jpg", ".jpeg", ".png", ".heic", ".heif"]
@@ -264,17 +265,22 @@ async def process_message(msg: cl.Message):
     if valid_images:
         image = valid_images[0]
         try:
-            file_content = open(image.path, "rb")
+            with open(image.path, "rb") as file:
+                file_contents = BytesIO(file.read())
+            
             upload_file = UploadFile(
-                filename=os.path.basename(image.path), file=file_content
+                filename=os.path.basename(image.path),
+                file=file_contents
             )
-            file_content.close()
-
+            
+            # Reset file pointer for is_valid_leaf
+            file_contents.seek(0)
             image_display = cl.Image(
                 path=image.path, name="uploaded_image", display="inline"
             )
-            results = make_prediction(image.path)
-            plant_name, disease_name = results.split("___")
+            results = await predict(upload_file)
+            result = results.predictions
+            plant_name, disease_name = result.split("___")
             print("plant name: ", plant_name)
             print("disease_name :", disease_name)
 
