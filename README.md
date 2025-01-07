@@ -6,7 +6,7 @@
 Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
  
 ### End To End Flow
-![plantE2E-7](https://github.com/user-attachments/assets/4f6273cd-80e8-4117-8e69-85567ae1758e)
+![p8](https://github.com/user-attachments/assets/1503245c-861d-4d81-a9b9-50383dcc7e96)
 
 
 ### High level Architecture
