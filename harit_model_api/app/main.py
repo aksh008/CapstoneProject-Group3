@@ -2,6 +2,8 @@ import base64
 from gettext import translation
 import os
 from pathlib import Path
+import shutil
+import sys
 from fastapi import FastAPI, UploadFile, File, HTTPException, APIRouter
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
@@ -20,6 +22,9 @@ from fastapi import FastAPI, Request
 import time
 ###########################################################################################################
 
+file = Path(__file__).resolve()
+rootPath = file.parents[1]
+sys.path.append(str(rootPath))
 
 # Load environment variables
 load_dotenv()
@@ -166,6 +171,20 @@ Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 @app.get("/")
 def root():
     return {"message": "Welcome to the FastAPI application with Prometheus monitoring! Go to /chainlit for the chatbot UI."}
+
+#Instrumentator().instrument(app).expose(app, endpoint="/predict")
+@app.post("/")
+def predict(input_data: UploadFile = File(...)) -> str:
+    upload_dir = Path(os.path.join(rootPath, "uploads"))
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    
+    file_path = os.path.join(upload_dir, input_data.filename)
+    
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(input_data.file, buffer)
+        
+    results = make_prediction(file_path)
+    return results
 
 # Chainlit integration
 
