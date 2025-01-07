@@ -215,7 +215,7 @@ def get_chatgpt_text_response(text, language):
             },
             {
                 "role": "user",
-                "content": f"Respond to the user query {text} in {language} in 200 words or less",
+                "content": f"Respond to the user query {text} in {language} in 20 words or less",
             },
         ],
         model="gpt-4o-mini",
