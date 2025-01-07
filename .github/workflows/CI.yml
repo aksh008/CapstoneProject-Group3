@@ -106,9 +106,9 @@ jobs:
         run: pip install --upgrade build
       - name: Build Package
         run: python -m build
-      - name: Copy .whl file to harit_model_api
-        run: |
-          cp -f dist/*.whl harit_model_api/
+      # - name: Copy .whl file to harit_model_api
+      #   run: |
+      #     cp -f dist/*.whl harit_model_api/
       - uses: actions/upload-artifact@v3
         with:
           name: my-build-package
