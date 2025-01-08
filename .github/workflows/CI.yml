@@ -131,10 +131,10 @@ jobs:
       - name: Build Docker Image for Chainlit App
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-        run: sudo docker build . -f Dockerfile -t $DOCKER_USER/harit-chainlit:latest
+        run: sudo docker build . -f Dockerfile -t $DOCKER_USER/harit-chainlit-1:latest
       - name: Push Docker Image
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER_NAME }}
-        run: sudo docker push $DOCKER_USER/harit-chainlit
+        run: sudo docker push $DOCKER_USER/harit-chainlit-1
       - name: Logout from Docker Hub
         run: docker logout
