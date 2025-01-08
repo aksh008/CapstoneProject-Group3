@@ -30,14 +30,14 @@ sys.path.append(str(rootPath))
 # Load environment variables
 load_dotenv()
 SYSTEM_PROMPT = """You are an expert plant pathologist. Your role:
-- Ask users to upload the plant image.
-- Once you get {Plant_Name} and {disease_name}, must Analyze plant diseases and provide treatment and provide all information to user.
-- you can detect disease only for these plant: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soyabean, Strawberry, Squash and Tomato
+- Once you get {plant} and {disease}, must Analyze plant diseases and provide treatment and provide all information to user.
+- you can analyse all the diseases only for these plants: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper,_bell, Potato, Raspberry, Soyabean, Strawberry, Squash and Tomato
 - You Must politely deny the user in case user ask for detecting disease for any other plants.
 - Give accurate identifications with confidence levels.
 - Suggest practical treatment options.
 - Maintain a helpful tone.
-- Include safety warnings."""
+- Include safety warnings.
+- Must answer to the user subsequent {prompt} related to {plant} and {disease}"""
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
@@ -190,7 +190,11 @@ def predict(input_data: UploadFile = File(...)) -> str:
 # Chainlit integration
 
 @literalai_client.step(type="run")
-def get_chatgpt_diagnosis(disease, language):
+def get_chatgpt_diagnosis(plant, disease, language):
+    
+    conversation_history = cl.user_session.get("conversation_history") 
+    prompt = f"\nBased on {plant} plant {disease} disease analysis, please show plant name and Disease name first then provide detailed treatment recommendations below 200 words in {language} for plant: {plant} and disease: {disease}."
+    
     response = client.chat.completions.create(
         messages=[
             {
@@ -199,15 +203,29 @@ def get_chatgpt_diagnosis(disease, language):
             },
             {
                 "role": "user",
-                "content": f"Based on this plant disease analysis, please show plant name and Disease name first then provide detailed treatment recommendations below 200 words in {language}: {disease}",
+                "content": prompt 
             },
         ],
         model="gpt-4o-mini",
+        temperature=0.7  # Set the temperature here
     )
+    conversation_history.append({"role": "user", "content": prompt})
+    conversation_history.append({"role": "assistant", "content": response.choices[0].message.content})
+
+    # Store the updated conversation history in the Chainlit session
+    cl.user_session.set("conversation_history", conversation_history)
     return response
 
 @literalai_client.step(type="run")
 def get_chatgpt_text_response(text, language):
+    conversation_history = cl.user_session.get("conversation_history")
+    print("get_chatgpt_text_response -> ", conversation_history )
+    prompt = f"Previous conversation:\n"
+    for message in conversation_history:
+        prompt += f"{message['role']}: {message['content']}\n"
+        
+    prompt += f"\nNew input:\nRespond to the user query: {text} in {language} in summary less then 50 words, in point wise and proper format."
+    
     response = client.chat.completions.create(
         messages=[
             {
@@ -216,17 +234,24 @@ def get_chatgpt_text_response(text, language):
             },
             {
                 "role": "user",
-                "content": f"Respond to the user query {text} in {language} in 20 words or less",
+                "content": prompt 
             },
         ],
         model="gpt-4o-mini",
+        temperature=0.7  # Set the temperature here
     )
+    conversation_history.append({"role": "user", "content": prompt})
+    conversation_history.append({"role": "assistant", "content": response.choices[0].message.content})
+
+    # Store the updated conversation history in the Chainlit session
+    cl.user_session.set("conversation_history", conversation_history)
     return response
 
 language = None
 
 @cl.on_chat_start
 async def start():
+    cl.user_session.set("conversation_history", [])
     languages = load_languages()
     actions = [
         cl.Action(
@@ -315,7 +340,7 @@ async def process_message(msg: cl.Message):
                     ).send()
                 else:
                     language_preference = cl.user_session.get("language", "English")
-                    response = get_chatgpt_diagnosis(results, language_preference)
+                    response = get_chatgpt_diagnosis(plant_name, disease_name, language_preference)
                     await cl.Message(
                         content=f"{response.choices[0].message.content}", 
                         author="plantcure"

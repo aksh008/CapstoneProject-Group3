@@ -103,7 +103,8 @@ def _get_image_classification(image: object) -> object:
     image.save(buf, format="JPEG")
     image = buf.getvalue()
     image_b64 = base64.b64encode(image).decode()
-    assert len(image_b64) < 180_000, "Image to large to upload."
+    max_size_bytes = 250 * 1024  # 200KB in bytes
+    assert len(image_b64) * 0.75 < max_size_bytes, "Image too large to upload. Maximum size is 200KB."
 
     prompt = f'''You are an expert plant leaf image classifier, who can classify if the given image contains a plant leaf.
         Respond in a structured JSON format that can be directly parsed into a Python dictionary/object. 
