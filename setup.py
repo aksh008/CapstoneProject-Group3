@@ -27,14 +27,6 @@ def list_reqs(fname="requirements.txt"):
     with open(REQUIREMENTS_DIR / fname) as fd:
         return fd.read().splitlines()
 
-# Custom command to copy the wheel file
-class BdistWheelCopyCommand(bdist_wheel):
-    def run(self):
-        bdist_wheel.run(self)
-        for wheel_file in Path(self.dist_dir).glob('*.whl'):
-            shutil.copy(wheel_file, ROOT_DIR / 'harit_model_api')
-            print(f"Copied {wheel_file.name} to {ROOT_DIR}/harit_model_api folder")
-
 # Where the magic happens:
 setup(
     name=NAME,
@@ -64,7 +56,4 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
     ],
-    cmdclass={
-        'bdist_wheel': BdistWheelCopyCommand,
-    },
 )

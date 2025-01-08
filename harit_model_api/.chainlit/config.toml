@@ -54,7 +54,7 @@ edit_message = true
 
 [UI]
 # Name of the assistant.
-name = "PlantCure"
+name = "Harit bot"
 favicon = "public/favicon.ico"
 custom_css = '/public/stylesheet.css'
 
@@ -90,7 +90,7 @@ custom_font = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
 # custom_build = "./public/build"
 
 [UI.theme]
-    default = "dark"
+    default = "light"
     #layout = "wide"
     font_family = "Montserrat, sans-serif"
 # Override default MUI light theme. (Check theme.ts)
@@ -104,8 +104,8 @@ custom_font = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
         #dark = "#980039"
         #light = "#FFE7EB"
     [UI.theme.light.text]
-        primary = "#FFFFFF"
-        secondary = "#FFFFFF"
+        primary = "#000000"
+        secondary = "#000000"
 
 # Override default MUI dark theme. (Check theme.ts)
 [UI.theme.dark]
@@ -117,8 +117,8 @@ custom_font = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
         #dark = "#980039"
         #light = "#FFE7EB"
     [UI.theme.dark.text]
-        #primary = "#EEEEEE"
-        #secondary = "#BDBDBD"
+        primary = "#000000"
+        secondary = "#000000"
 
 [meta]
 generated_by = "1.3.2"
