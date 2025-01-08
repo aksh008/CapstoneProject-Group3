@@ -14,6 +14,7 @@ from harit_model.predict import make_prediction
 from chainlit.utils import mount_chainlit
 from prometheus_fastapi_instrumentator import Instrumentator
 from core import load_languages, translations, language_mapping
+from nvidia_utils import is_valid_image
 
 ####################################PROMETHEUS RELATED LIBRARY IMPORT######################################
 from prometheus_client import Gauge, Counter, Histogram, CollectorRegistry, REGISTRY
@@ -28,7 +29,7 @@ sys.path.append(str(rootPath))
 
 # Load environment variables
 load_dotenv()
-SYSTEM_PROMPT = """You are a plant disease detection assistant. Your role:
+SYSTEM_PROMPT = """You are an expert plant pathologist. Your role:
 - Ask users to upload the plant image.
 - Once you get {Plant_Name} and {disease_name}, must Analyze plant diseases and provide treatment and provide all information to user.
 - you can detect disease only for these plant: Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soyabean, Strawberry, Squash and Tomato
@@ -292,20 +293,20 @@ async def process_message(msg: cl.Message):
             image_display = cl.Image(
                 path=image.path, name="uploaded_image", display="inline"
             )
-            results = make_prediction(image.path)
-            plant_name, disease_name = results.split("___")
-            print("plant name: ", plant_name)
-            print("disease_name :", disease_name)
-
-            if(plant_name == "RandomImage"):
-                isValidLeaf = False
-                
+            
+            isValidLeaf = is_valid_image(image.path)
+            
             await cl.Message(
                 content= get_translated_message("uploaded_image", current_language), 
                 elements=[image_display]
             ).send()
             
-            if isValidLeaf == True:                
+            if isValidLeaf == True: 
+                results = make_prediction(image.path)
+                plant_name, disease_name = results.split("___")
+                print("plant name: ", plant_name)
+                print("disease_name :", disease_name)
+            
                 is_healthy = disease_name.lower() == "healthy"
                 if is_healthy:
                     await cl.Message(

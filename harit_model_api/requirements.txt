@@ -14,4 +14,7 @@ scikit-learn
 prometheus_fastapi_instrumentator #prometheus related
 prometheus_client #prometheus related
 psutils #prometheus related
+requests
+pillow
+python-dotenv
 harit_model-2-py3-none-any.whl

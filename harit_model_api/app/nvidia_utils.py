@@ -4,11 +4,18 @@ import json
 import logging
 from collections import deque
 from datetime import datetime, timedelta
+import os
+from pathlib import Path
+import sys
 from typing import Optional
 
 import requests
 from PIL import Image
 from dotenv import load_dotenv
+
+file = Path(__file__).resolve()
+rootPath = file.parents[1]
+sys.path.append(str(rootPath))
 
 logger = logging.getLogger(__name__)
 load_dotenv()  # Load environment variables from .env
@@ -186,21 +193,25 @@ def configure_rate_limit(
 configure_rate_limit(max_requests=10, time_window=60)
 
 
-if __name__ == "__main__":
-    # Load an image using Pillow
-    #image_path = "/Users/hemanth/Downloads/ICICI-Chequ.jpg"
-    image_path = "/Users/hemanth/Downloads/book.jpg"
-    #image_path = "/Users/hemanth/Downloads/Holdings.csv"
-    #image_path = "/Users/hemanth/Downloads/table.jpg"
-    #image_path = "/Users/hemanth/Downloads/straw1.jpg"
-    #image_path = "/Users/hemanth/Downloads/tree1.jpg"
-    #image_path = "/Users/hemanth/Documents/AI/IISC/AI-ML-Classes/CapstoneProject-Group3/harit_model/dataset/New Plant Diseases Dataset(Augmented)/New Plant Diseases Dataset(Augmented)/valid/Apple___healthy/0a02e8cb-b715-497f-a16a-c28b3409f927___RS_HL 7432.JPG"
-  
-  # Validate file extension
+def is_valid_image(image_path):
     valid_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.gif', '.tiff')
     if not image_path.lower().endswith(valid_extensions):
-        #raise ValueError(f"Invalid file type: {image_path}. Please provide an image file.")
-        print("invalid format") 
+        print("invalid format")
     else:
         image = Image.open(image_path)
-        print(get_plant_image_details(image))
+        isValid = get_plant_image_details(image)
+        return isValid
+    return False
+        
+# if __name__ == "__main__":
+#     # Load an image using Pillow
+#     image_path = "/Users/rgontia/Downloads/harit_bot_images/tom_leaf.jpg"
+#     #image_path = "/Users/rgontia/Downloads/harit_bot_images/book.jpeg"
+    
+#   # Validate file extension
+#     valid_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.gif', '.tiff')
+#     if not image_path.lower().endswith(valid_extensions):
+#         print("invalid format") 
+#     else:
+#         image = Image.open(image_path)
+#         print(get_plant_image_details(image))
