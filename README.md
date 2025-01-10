@@ -2,7 +2,7 @@
 # AIMLOps CapstoneProject-Group3
 # Project Name :  Plant Disease Detection
 # Harit Bot - www.haritbot.com
-
+ 
 Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
  
 ### End To End Flow
