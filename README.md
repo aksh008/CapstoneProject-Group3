@@ -37,7 +37,9 @@ Capstone Project for AIMLOps by Group 3 , Plant Disease Detection.
 
 ###### Note:
  Literal ai to store user feedback (https://www.literalai.com/) 
-  - Creds shared on demand 
+  - Creds shared on demand
+
+### Data Set - https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset
 
 ## Clear ML Related
 #### Setting up on local dev box
